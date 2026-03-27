@@ -1,0 +1,16 @@
+{
+  "name": "playspot",
+  "version": "1.0.0",
+  "description": "Práctico 1 de la materia de Web II",
+  "repository": {
+    "type": "git",
+    "url": ""
+  },
+  "license": "MIT",
+  "author": "Marcelo Dávila & Sebastián Serres",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }
+}

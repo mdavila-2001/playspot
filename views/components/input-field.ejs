@@ -5,6 +5,7 @@
   const placeholder = locals.placeholder || '';
   const required = locals.required ? 'required' : '';
   const icon = locals.icon || '';
+  const showToggle = locals.showToggle || false;
 %>
 
 <style>
@@ -21,6 +22,10 @@
       margin-bottom: 0.5rem;
   }
   
+  .kinetic-input-wrapper {
+      position: relative;
+  }
+
   .form-control-kinetic {
       background-color: rgba(225, 227, 228, 0.4);
       border: none;
@@ -30,6 +35,10 @@
       width: 100%;
       color: var(--ps-on-background, #191c1d);
       font-family: 'Plus Jakarta Sans', sans-serif;
+  }
+
+  .form-control-kinetic.has-toggle {
+      padding-right: 3rem;
   }
   
   .form-control-kinetic:focus {
@@ -41,6 +50,29 @@
   .form-control-kinetic::placeholder {
       color: #94a3b8; 
   }
+
+  .toggle-password-btn {
+      position: absolute;
+      right: 0.75rem;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      padding: 0;
+      cursor: pointer;
+      color: var(--ps-athletic-blue, #4e6073);
+      display: flex;
+      align-items: center;
+      transition: color 0.2s ease;
+  }
+
+  .toggle-password-btn:hover {
+      color: var(--ps-emerald, #006d37);
+  }
+
+  .toggle-password-btn .material-symbols-outlined {
+      font-size: 1.25rem;
+  }
 </style>
 
 <div class="kinetic-input-group">
@@ -50,12 +82,30 @@
       <% } %>
       <%= label %>
   </label>
-  <input 
-    type="<%= type %>" 
-    name="<%= name %>" 
-    id="<%= name %>" 
-    class="form-control form-control-kinetic" 
-    placeholder="<%= placeholder %>"
-    <%= required %>
-  >
+  <div class="kinetic-input-wrapper">
+    <input 
+      type="<%= type %>" 
+      name="<%= name %>" 
+      id="<%= name %>" 
+      class="form-control form-control-kinetic <%= showToggle ? 'has-toggle' : '' %>" 
+      placeholder="<%= placeholder %>"
+      <%= required %>
+    >
+    <% if (showToggle) { %>
+    <button type="button" class="toggle-password-btn" aria-label="Mostrar u ocultar contraseña"
+      onclick="(function(btn) {
+        const input = btn.parentElement.querySelector('input');
+        const icon = btn.querySelector('.material-symbols-outlined');
+        if (input.type === 'password') {
+          input.type = 'text';
+          icon.textContent = 'visibility_off';
+        } else {
+          input.type = 'password';
+          icon.textContent = 'visibility';
+        }
+      })(this)">
+      <span class="material-symbols-outlined">visibility</span>
+    </button>
+    <% } %>
+  </div>
 </div>

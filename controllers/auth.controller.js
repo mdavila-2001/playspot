@@ -1,76 +1,81 @@
-const bycrypt = require('bcryptjs');
+const bcrypt = require('bcryptjs');
+const db = require('../models');
 
-module.exports = (app,db) => {
-    app.get('/register', (req, res) => {
-        res.render('auth/register', { error:null, hideNav: true });
-    });
+const showLogin = (req, res) => {
+    const error = req.session.flashError || null;
+    req.session.flashError = null;
+    res.render('auth/login', { error, hideNav: true });
+};
 
-    app.post('/register', async(req, res) => {
-        try {
-            const { name, email, password, role } = req.body;
-            
-            const existingUser = await db.User.findOne({ where: { email } });
-            if (existingUser) {
-                return res.render('auth/register', { error: 'El correo ya está registrado', hideNav: true });
-            }
+// POST /login
+const login = async (req, res) => {
+    try {
+        const { email, password } = req.body;
 
-            const salt = await bycrypt.genSalt(10);
-            const hashedPassword = await bycrypt.hash(password, salt);
-
-            await db.User.create({
-                name,
-                email,
-                password: hashedPassword,
-                role: role || 'client'
-            });
-
-            res.redirect('/login');
-        } catch (error) {
-            console.log(error);
-            res.render('auth/register', { error: 'Error al registrar el usuario', hideNav: true });
+        const user = await db.User.findOne({ where: { email } });
+        if (!user) {
+            req.session.flashError = 'Credenciales incorrectas';
+            return res.redirect('/login');
         }
-    });
 
-    app.get('/login', (req, res) => {
-        const error = req.session.flashError || null;
-        req.session.flashError = null;
-        res.render('auth/login', { error, hideNav: true });
-    });
-
-    app.post('/login', async(req, res) => {
-        try {
-            const { email, password } = req.body;
-            
-            const user = await db.User.findOne({ where: { email } });
-            if (!user) {
-                req.session.flashError = 'Credenciales incorrectas';
-                return res.redirect('/login');
-            }
-
-            const isPasswordValid = await bycrypt.compare(password, user.password);
-            if (!isPasswordValid) {
-                req.session.flashError = 'Credenciales incorrectas';
-                return res.redirect('/login');
-            }
-
-            req.session.userId = user.id;
-            req.session.role = user.role;
-
-            res.redirect('/');
-        } catch (error) {
-            console.log(error);
-            req.session.flashError = 'Error al iniciar sesión';
-            res.redirect('/login');
+        const isPasswordValid = await bcrypt.compare(password, user.password);
+        if (!isPasswordValid) {
+            req.session.flashError = 'Credenciales incorrectas';
+            return res.redirect('/login');
         }
-    });
 
-    app.post('/logout', (req, res) => {
-        req.session.destroy((err) => {
-            if (err) {
-                console.log(err);
-                return res.redirect('/');
-            }
-            res.redirect('/login');
+        req.session.userId = user.id;
+        req.session.role = user.role;
+        res.redirect('/');
+    } catch (error) {
+        console.log(error);
+        req.session.flashError = 'Error al iniciar sesión';
+        res.redirect('/login');
+    }
+};
+
+const showRegister = (req, res) => {
+    const error = req.session.flashError || null;
+    req.session.flashError = null;
+    res.render('auth/register', { error, hideNav: true });
+};
+
+const register = async (req, res) => {
+    try {
+        const { name, email, password, role } = req.body;
+
+        const existingUser = await db.User.findOne({ where: { email } });
+        if (existingUser) {
+            req.session.flashError = 'El correo ya está registrado';
+            return res.redirect('/register');
+        }
+
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(password, salt);
+
+        await db.User.create({
+            name,
+            email,
+            password: hashedPassword,
+            role: role || 'client'
         });
+
+        res.redirect('/login');
+    } catch (error) {
+        console.log(error);
+        req.session.flashError = 'Error al registrar el usuario';
+        res.redirect('/register');
+    }
+};
+
+const logout = (req, res) => {
+    req.session.destroy((err) => {
+        if (err) {
+            console.log(err);
+            return res.redirect('/');
+        }
+        res.redirect('/login');
     });
 };
+
+module.exports = { showLogin, login, showRegister, register, logout };

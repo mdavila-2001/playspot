@@ -1,0 +1,152 @@
+<%- include('../components/layout/header.ejs', { title: 'Registro' }) %>
+<link rel="stylesheet" href="/auth/register.css">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
+
+<div class="register-wrapper">
+    <div class="sports-mesh"></div>
+    <div class="kinetic-blob-1"></div>
+    <div class="kinetic-blob-2"></div>
+    
+    <main class="glass-card">
+        <div class="mb-4">
+            <h1 class="register-headline fs-1 mb-3">
+                Únete al <br>
+                <span>Equipo</span>
+            </h1>
+            <p class="text-muted fw-medium small">
+                Tu puerta de entrada a las mejores canchas de la ciudad.
+            </p>
+        </div>
+
+        <%- include('../components/alert-error', { error: locals.error }) %>
+
+        <div id="clientAlert" class="alert alert-kinetic-client d-none d-flex align-items-center mb-3" role="alert">
+            <span class="material-symbols-outlined fs-5 me-3">error</span>
+            <div class="small fw-bold mb-0" id="clientAlertMsg"></div>
+        </div>
+
+        <form id="registerForm" action="/register" method="POST">
+            
+            <%- include('../components/input-field', { 
+                label: 'Nombre Completo', 
+                name: 'name', 
+                type: 'text', 
+                placeholder: 'Ej: Mateo Silva',
+                icon: 'person'
+            }) %>
+
+            <%- include('../components/input-field', { 
+                label: 'Correo Electrónico', 
+                name: 'email', 
+                type: 'email', 
+                placeholder: 'tu@ejemplo.com',
+                icon: 'mail'
+            }) %>
+
+            <%- include('../components/input-field', { 
+                label: 'Contraseña', 
+                name: 'password', 
+                type: 'password', 
+                placeholder: 'Mínimo 8 caracteres',
+                icon: 'lock',
+                showToggle: true
+            }) %>
+
+            <%- include('../components/input-field', { 
+                label: 'Confirmar Contraseña', 
+                name: 'confirmPassword', 
+                type: 'password', 
+                placeholder: 'Repite tu contraseña',
+                icon: 'lock_reset',
+                showToggle: true
+            }) %>
+
+            <div class="d-flex align-items-start gap-2 mb-4 mt-2">
+                <div class="form-check mt-1">
+                    <input class="form-check-input" type="checkbox" id="terms" style="border-color: var(--ps-athletic-blue);">
+                </div>
+                <label class="form-check-label small text-muted fw-medium" for="terms">
+                    Acepto los <a href="#" class="text-decoration-none fw-bold" style="color: var(--ps-emerald)">Términos de Servicio</a> y la <a href="#" class="text-decoration-none fw-bold" style="color: var(--ps-emerald)">Política de Privacidad</a> de PlaySpot.
+                </label>
+            </div>
+
+            <%- include('../components/button-primary', { 
+                text: 'CREAR MI CUENTA', 
+                type: 'submit' 
+            }) %>
+            
+        </form>
+
+        <div class="mt-4 text-center">
+            <p class="small text-muted fw-medium">
+                ¿Ya eres parte de PlaySpot? 
+                <a href="/login" class="fw-bold text-decoration-none" style="color: var(--ps-emerald)">Inicia sesión aquí</a>
+            </p>
+        </div>
+    </main>
+</div>
+
+<div class="position-relative z-1 text-center pb-4" style="margin-top: -2rem;">
+    <div class="d-inline-flex align-items-center gap-2 px-4 py-2 rounded-pill shadow-sm" style="background: rgba(237, 238, 239, 0.5); backdrop-filter: blur(5px);">
+        <span class="pulse-indicator"></span>
+        <span class="small fw-bold text-uppercase" style="color: var(--ps-athletic-blue); letter-spacing: 0.1em; font-size: 0.7rem;">
+            Estás a un paso de la cancha
+        </span>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const form         = document.getElementById('registerForm');
+        const clientAlert  = document.getElementById('clientAlert');
+        const clientAlertMsg = document.getElementById('clientAlertMsg');
+
+        function showClientAlert(msg) {
+            clientAlertMsg.textContent = msg;
+            clientAlert.classList.remove('d-none');
+            clientAlert.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+
+        function hideClientAlert() {
+            clientAlert.classList.add('d-none');
+        }
+
+        form.addEventListener('submit', (e) => {
+            const name     = document.querySelector('input[name="name"]').value.trim();
+            const email    = document.querySelector('input[name="email"]').value.trim();
+            const password = document.querySelector('input[name="password"]').value.trim();
+            const confirm  = document.querySelector('input[name="confirmPassword"]').value.trim();
+            const terms    = document.getElementById('terms').checked;
+
+            hideClientAlert();
+
+            if (!name || !email || !password || !confirm) {
+                e.preventDefault();
+                return showClientAlert('Por favor, completa todos los campos obligatorios.');
+            }
+
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                e.preventDefault();
+                return showClientAlert('Por favor, ingresa un correo electrónico válido.');
+            }
+
+            if (password.length < 8) {
+                e.preventDefault();
+                return showClientAlert('La contraseña debe tener al menos 8 caracteres.');
+            }
+
+            if (password !== confirm) {
+                e.preventDefault();
+                return showClientAlert('Las contraseñas no coinciden. Por favor, verifica.');
+            }
+
+            if (!terms) {
+                e.preventDefault();
+                return showClientAlert('Debes aceptar los Términos de Servicio para continuar.');
+            }
+        });
+    });
+</script>
+
+<%- include('../components/layout/footer.ejs') %>

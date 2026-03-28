@@ -7,7 +7,6 @@ const showLogin = (req, res) => {
     res.render('auth/login', { error, hideNav: true });
 };
 
-// POST /login
 const login = async (req, res) => {
     try {
         const { email, password } = req.body;

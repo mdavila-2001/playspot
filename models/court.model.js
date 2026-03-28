@@ -8,6 +8,10 @@ module.exports = (sequelize) => {
                 type: DataTypes.STRING,
                 allowNull: false,
             },
+            image_url: {
+                type: DataTypes.STRING,
+                allowNull: true,
+            },
             price_per_hour: {
                 type: DataTypes.DECIMAL(10, 2),
                 allowNull: false,

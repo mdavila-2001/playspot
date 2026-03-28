@@ -1,0 +1,51 @@
+<% 
+  const label = locals.label || '';
+  const name = locals.name || '';
+  const type = locals.type || 'text';
+  const placeholder = locals.placeholder || '';
+  const required = locals.required ? 'required' : '';
+%>
+
+<style>
+  .input-group-kinetic {
+    margin-bottom: 1.5rem;
+  }
+  
+  .label-kinetic {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 0.875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #4e6073;
+    margin-bottom: 0.5rem;
+    display: block;
+  }
+
+  .form-control-kinetic {
+    background-color: rgba(237, 238, 239, 0.4);
+    border: 1px solid rgba(25, 28, 29, 0.15);
+    border-radius: 0.5rem;
+    padding: 1rem;
+    color: #191c1d;
+    transition: all 0.3s ease;
+  }
+
+  .form-control-kinetic:focus {
+    background-color: #ffffff;
+    border: 2px solid #006d37;
+    box-shadow: none;
+    outline: none;
+  }
+</style>
+
+<div class="input-group-kinetic">
+  <label for="<%= name %>" class="label-kinetic"><%= label %></label>
+  <input 
+    type="<%= type %>" 
+    name="<%= name %>" 
+    id="<%= name %>" 
+    class="form-control form-control-kinetic" 
+    placeholder="<%= placeholder %>"
+    <%= required %>
+  >
+</div>

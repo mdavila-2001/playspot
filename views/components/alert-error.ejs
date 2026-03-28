@@ -1,0 +1,19 @@
+<% if (locals.error) { %>
+<style>
+  .alert-kinetic {
+    background-color: #f8d7da;
+    border: none;
+    border-radius: 1rem;
+    color: #191c1d;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    padding: 1rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 12px 24px -6px rgba(25, 28, 29, 0.05);
+  }
+</style>
+
+<div class="alert alert-kinetic d-flex align-items-center" role="alert">
+  <i class="bi bi-exclamation-triangle-fill me-2"></i>
+  <div><%= error %></div>
+</div>
+<% } %>

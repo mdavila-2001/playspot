@@ -1,8 +1,9 @@
 const express = require('express');
 const app = express();
-const port = 3000;
+const port = 3001;
 const bodyParser = require('body-parser');
 const session = require('express-session');
+const bycrypt = require('bcryptjs');
 const db = require('./models');
 
 app.set('view engine', 'ejs');
@@ -15,8 +16,46 @@ app.use(session({
     saveUninitialized: false
 }));
 
-require('./controllers/auth.controller')(app, db);
+require('./controllers')(app, db);
+
+const seedAdmin = async (db) => {
+    try {
+        const adminExists = await db.User.findOne({ where: { role: 'admin' } });
+        
+        if (!adminExists) {
+            const hashedPassword = await bycrypt.hash('12345678', 10);
+
+            await db.User.create({
+                name: 'Admin PlaySpot',
+                email: 'admin@playspot.com',
+                password: hashedPassword,
+                role: 'admin'
+            });
+
+            console.log('Admin creado exitosamente');
+        } else {
+            console.log('El admin ya existe');
+        }
+    } catch (error) {
+        console.log('Error creando al admin: ', error);
+    }
+}
+
+db.sequelize.sync({
+}).then(async () => {
+    console.log("¡La base de datos fue conectada correctamente!");
+    await seedAdmin(db);
+    console.log('Admin para PlaySpot listo para trabajar');
+});
 
 app.listen(port, () => {
-    console.log(`Servidor corriendo en http://localhost:${port}`);
+    console.log(`Server running at http://localhost:${port}`);
+});
+
+app.get('/', (req, res) => {
+    if (req.session.userId) {
+        res.send('<h1>Bienvenido a PlaySpot!</h1><p>Has iniciado sesión.</p><form action="/logout" method="POST"><button>Cerrar Sesión</button></form>');
+    } else {
+        res.send('La app funciona');
+    }
 });

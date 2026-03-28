@@ -4,42 +4,52 @@
   const type = locals.type || 'text';
   const placeholder = locals.placeholder || '';
   const required = locals.required ? 'required' : '';
+  const icon = locals.icon || '';
 %>
 
 <style>
-  .input-group-kinetic {
-    margin-bottom: 1.5rem;
+  .kinetic-input-group {
+      margin-bottom: 1.25rem;
   }
   
-  .label-kinetic {
-    font-family: 'Plus Jakarta Sans', sans-serif;
-    font-size: 0.875rem;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    color: #4e6073;
-    margin-bottom: 0.5rem;
-    display: block;
+  .kinetic-label {
+      font-size: 0.75rem; 
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em; 
+      color: var(--ps-athletic-blue, #4e6073); 
+      margin-bottom: 0.5rem;
   }
-
+  
   .form-control-kinetic {
-    background-color: rgba(237, 238, 239, 0.4);
-    border: 1px solid rgba(25, 28, 29, 0.15);
-    border-radius: 0.5rem;
-    padding: 1rem;
-    color: #191c1d;
-    transition: all 0.3s ease;
+      background-color: rgba(225, 227, 228, 0.4);
+      border: none;
+      border-radius: 0.5rem;
+      padding: 0.75rem 1rem;
+      transition: all 0.2s ease;
+      width: 100%;
+      color: var(--ps-on-background, #191c1d);
+      font-family: 'Plus Jakarta Sans', sans-serif;
   }
-
+  
   .form-control-kinetic:focus {
-    background-color: #ffffff;
-    border: 2px solid #006d37;
-    box-shadow: none;
-    outline: none;
+      background-color: white; 
+      box-shadow: 0 0 0 2px var(--ps-emerald, #006d37); 
+      outline: none;
+  }
+  
+  .form-control-kinetic::placeholder {
+      color: #94a3b8; 
   }
 </style>
 
-<div class="input-group-kinetic">
-  <label for="<%= name %>" class="label-kinetic"><%= label %></label>
+<div class="kinetic-input-group">
+  <label for="<%= name %>" class="kinetic-label d-flex align-items-center gap-2">
+      <% if (icon) { %>
+          <span class="material-symbols-outlined" style="font-size: 1rem;"><%= icon %></span>
+      <% } %>
+      <%= label %>
+  </label>
   <input 
     type="<%= type %>" 
     name="<%= name %>" 

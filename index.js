@@ -10,6 +10,9 @@ app.set('view engine', 'ejs');
 
 app.use(bodyParser.urlencoded({ extended: false }));
 
+const path = require('path');
+app.use(express.static(path.join(__dirname, 'views')));
+
 app.use(session({
     secret: 'llave-segura-de-playspot',
     resave: false,
@@ -54,8 +57,8 @@ app.listen(port, () => {
 
 app.get('/', (req, res) => {
     if (req.session.userId) {
-        res.send('<h1>Bienvenido a PlaySpot!</h1><p>Has iniciado sesión.</p><form action="/logout" method="POST"><button>Cerrar Sesión</button></form>');
+        res.render('index', { user: req.session.user });
     } else {
-        res.send('La app funciona');
+        res.redirect('/login');
     }
 });

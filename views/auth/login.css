@@ -1,0 +1,154 @@
+.alert-kinetic-client {
+    background-color: #ffdad6;
+    color: #93000a;
+    border: none;
+    border-left: 4px solid #ba1a1a;
+    border-radius: 0.5rem;
+    padding: 0.75rem 1rem;
+    margin-bottom: 1.25rem;
+}
+
+.login-wrapper {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    padding: 2rem 1.5rem;
+    overflow: hidden;
+    background-color: var(--ps-surface);
+}
+
+.login-bg-image {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+}
+
+.login-bg-overlay {
+    position: absolute;
+    inset: 0;
+    background-color: rgba(248, 249, 250, 0.8);
+    backdrop-filter: blur(4px);
+    z-index: 1;
+}
+
+.login-content {
+    position: relative;
+    z-index: 10;
+    width: 100%;
+    max-width: 450px;
+}
+
+.login-card {
+    background-color: white;
+    border-radius: 0.75rem;
+    padding: 2.5rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+    border: 1px solid rgba(187, 203, 187, 0.15);
+}
+
+.brand-title {
+    font-family: 'Lexend', sans-serif;
+    font-weight: 900;
+    font-size: 2.25rem;
+    line-height: 2.5rem;
+    letter-spacing: -0.05em;
+    color: var(--ps-emerald);
+    margin-bottom: 0.5rem;
+}
+
+.login-subtitle {
+    font-family: 'Lexend', sans-serif;
+    font-size: 1.5rem;
+    line-height: 2rem;
+    font-weight: 700;
+    color: var(--ps-on-background);
+    margin-bottom: 0;
+}
+
+.login-desc {
+    color: var(--ps-athletic-blue);
+    font-weight: 500;
+    margin-top: 0.25rem;
+}
+
+.kinetic-label {
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--ps-athletic-blue);
+    margin-bottom: 0.5rem;
+}
+
+.form-control-kinetic {
+    background-color: rgba(225, 227, 228, 0.4);
+    border: none;
+    border-radius: 0.5rem;
+    padding: 0.75rem 1rem;
+    transition: all 0.2s ease;
+    width: 100%;
+    color: var(--ps-on-background);
+}
+
+.form-control-kinetic:focus {
+    background-color: white;
+    box-shadow: 0 0 0 2px var(--ps-emerald);
+    outline: none;
+}
+
+.form-control-kinetic::placeholder {
+    color: #94a3b8;
+}
+
+.btn-kinetic-primary {
+    background: linear-gradient(135deg, #006d37 0%, #2ecc71 100%);
+    color: white;
+    border: none;
+    padding: 1rem;
+    font-family: 'Lexend', sans-serif;
+    font-weight: 700;
+    font-size: 1.125rem;
+    border-radius: 0.5rem;
+    width: 100%;
+    transition: all 0.2s ease;
+    box-shadow: 0 10px 15px -3px rgba(0, 109, 55, 0.2), 0 4px 6px -2px rgba(0, 109, 55, 0.1); 
+}
+
+.btn-kinetic-primary:hover {
+    transform: scale(1.02);
+    color: white;
+}
+
+.btn-kinetic-primary:active {
+    transform: scale(0.95);
+}
+
+.material-symbols-outlined {
+    font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+}
+
+.decor-circle {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(3rem);
+}
+
+.decor-top-right {
+    top: 5rem;
+    right: 5rem;
+    width: 8rem;
+    height: 8rem;
+    background: linear-gradient(135deg, #006d37 0%, #2ecc71 100%);
+    opacity: 0.1;
+}
+
+.decor-bottom-left {
+    bottom: 5rem;
+    left: 5rem;
+    width: 12rem;
+    height: 12rem;
+    background-color: #006397; 
+    opacity: 0.1;
+}

@@ -2,7 +2,7 @@ const bycrypt = require('bcryptjs');
 
 module.exports = (app,db) => {
     app.get('/register', (req, res) => {
-        res.render('auth/register', { error:null });
+        res.render('auth/register', { error:null, hideNav: true });
     });
 
     app.post('/register', async(req, res) => {
@@ -11,7 +11,7 @@ module.exports = (app,db) => {
             
             const existingUser = await db.User.findOne({ where: { email } });
             if (existingUser) {
-                return res.render('auth/register', { error: 'El correo ya está registrado' });
+                return res.render('auth/register', { error: 'El correo ya está registrado', hideNav: true });
             }
 
             const salt = await bycrypt.genSalt(10);
@@ -27,12 +27,14 @@ module.exports = (app,db) => {
             res.redirect('/login');
         } catch (error) {
             console.log(error);
-            res.render('auth/register', { error: 'Error al registrar el usuario' });
+            res.render('auth/register', { error: 'Error al registrar el usuario', hideNav: true });
         }
     });
 
     app.get('/login', (req, res) => {
-        res.render('auth/login', { error:null });
+        const error = req.session.flashError || null;
+        req.session.flashError = null;
+        res.render('auth/login', { error, hideNav: true });
     });
 
     app.post('/login', async(req, res) => {
@@ -41,12 +43,14 @@ module.exports = (app,db) => {
             
             const user = await db.User.findOne({ where: { email } });
             if (!user) {
-                return res.render('auth/login', { error: 'Usuario no encontrado' });
+                req.session.flashError = 'Credenciales incorrectas';
+                return res.redirect('/login');
             }
 
             const isPasswordValid = await bycrypt.compare(password, user.password);
             if (!isPasswordValid) {
-                return res.render('auth/login', { error: 'Contraseña incorrecta' });
+                req.session.flashError = 'Credenciales incorrectas';
+                return res.redirect('/login');
             }
 
             req.session.userId = user.id;
@@ -55,7 +59,8 @@ module.exports = (app,db) => {
             res.redirect('/');
         } catch (error) {
             console.log(error);
-            res.render('auth/login', { error: 'Error al iniciar sesión' });
+            req.session.flashError = 'Error al iniciar sesión';
+            res.redirect('/login');
         }
     });
 

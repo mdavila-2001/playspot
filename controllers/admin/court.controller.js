@@ -88,6 +88,25 @@ exports.createCourt = async (req, res) => {
         if (!currentUser) return;
 
         const { name, court_type_id, price_per_hour, is_active } = req.body;
+        
+        let errorMsg = null;
+        if (!name || name.trim() === '') errorMsg = 'El nombre de la cancha es obligatorio.';
+        else if (!court_type_id) errorMsg = 'Debe seleccionar una categoría de deporte.';
+        else if (!price_per_hour || isNaN(price_per_hour) || parseFloat(price_per_hour) < 0) {
+            errorMsg = 'La tarifa por hora debe ser un número válido mayor o igual a 0.';
+        }
+
+        if (errorMsg) {
+            const courtTypes = await db.CourtType.findAll({ order: [['name', 'ASC']] });
+            return res.render('admin/courts/form', {
+                court: req.body,
+                courtTypes,
+                user: currentUser,
+                activePage: 'courts',
+                error: errorMsg
+            });
+        }
+
         const image_url = req.file ? `/uploads/courts/${req.file.filename}` : null;
 
         await db.Court.create({
@@ -136,6 +155,24 @@ exports.updateCourt = async (req, res) => {
         if (!court) return res.redirect('/admin/courts');
 
         const { name, court_type_id, price_per_hour, is_active } = req.body;
+
+        let errorMsg = null;
+        if (!name || name.trim() === '') errorMsg = 'El nombre de la cancha es obligatorio.';
+        else if (!court_type_id) errorMsg = 'Debe seleccionar una categoría de deporte.';
+        else if (!price_per_hour || isNaN(price_per_hour) || parseFloat(price_per_hour) < 0) {
+            errorMsg = 'La tarifa por hora debe ser un número válido mayor o igual a 0.';
+        }
+
+        if (errorMsg) {
+            const courtTypes = await db.CourtType.findAll({ order: [['name', 'ASC']] });
+            return res.render('admin/courts/form', {
+                court: { ...req.body, id: court.id, image_url: court.image_url },
+                courtTypes,
+                user: currentUser,
+                activePage: 'courts',
+                error: errorMsg
+            });
+        }
 
         court.name = name;
         court.court_type_id = parseInt(court_type_id) || null;

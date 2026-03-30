@@ -45,25 +45,28 @@ const seedCourts = async () => {
     try {
         const courtCount = await db.Court.count();
         if (courtCount === 0) {
-            const type = await db.CourtType.create({ name: 'Fútbol Sintético' });
+            const typeFutsal = await db.CourtType.create({ name: 'Fútbol Sintético' });
+            const typeTenis = await db.CourtType.create({ name: 'Tenis' });
+            const typePadel = await db.CourtType.create({ name: 'Pádel' });
+            const typeBasket = await db.CourtType.create({ name: 'Baloncesto' });
 
             await db.Court.bulkCreate([
                 {
                     name: 'Cancha 1 (Premium)',
                     price_per_hour: 2500,
-                    court_type_id: type.id,
+                    court_type_id: typeFutsal.id,
                     image_url: 'https://images.unsplash.com/photo-1579952363873-27f3bade9f55?q=80&w=600&auto=format&fit=crop'
                 },
                 {
                     name: 'Cancha 2 (Económica)',
                     price_per_hour: 1500,
-                    court_type_id: type.id,
+                    court_type_id: typeFutsal.id,
                     image_url: 'https://th.bing.com/th/id/R.8fc66bf6d27863f3d460073fada0a010?rik=zIJB7r8GDtQO9g&riu=http%3a%2f%2frecreasport.com%2fwp-content%2fuploads%2f2017%2f04%2fSAM_0191-2.jpg&ehk=rT6Sfqu7OrTaehM4mOpmuNXz9P0aDr%2fehMicFv5kPFo%3d&risl=&pid=ImgRaw&r=0'
                 },
                 {
-                    name: 'Cancha VIP Techada',
+                    name: 'Pista Central Tenis',
                     price_per_hour: 3500,
-                    court_type_id: type.id,
+                    court_type_id: typeTenis.id,
                     image_url: 'https://tse2.mm.bing.net/th/id/OIP.fw-QF9R0YfhIYJAub2PLgAHaEl?rs=1&pid=ImgDetMain&o=7&rm=3'
                 }
             ]);

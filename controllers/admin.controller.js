@@ -54,7 +54,7 @@ exports.generateSchedules = async (req, res) => {
         }
 
         if (newSchedules.length > 0) await db.Schedule.bulkCreate(newSchedules);
-        res.redirect('/admin/dashboard?success=1');
+        res.redirect('/dashboard?success=1');
     } catch (error) {
         console.error(error);
         res.status(500).send("Error generando horarios");

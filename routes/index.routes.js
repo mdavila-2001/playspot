@@ -36,7 +36,6 @@ router.get('/admin/court-types/edit/:id', courtTypeController.edit);
 router.post('/admin/court-types/edit/:id', courtTypeController.update);
 router.post('/admin/court-types/delete/:id', courtTypeController.destroy);
 
-router.get('/admin/dashboard', adminController.getDashboard);
 router.post('/admin/schedules', adminController.generateSchedules);
 router.get('/admin/bookings', adminController.getAllBookings);
 router.post('/admin/bookings/:id/status', adminController.changeBookingStatus);

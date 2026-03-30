@@ -1,0 +1,179 @@
+<%- include('../../components/layout/header.ejs', { title: (court.id ? 'Editar Cancha' : 'Nueva Cancha') + ' | PlaySpot', hideNav: true }) %>
+<%- include('../../components/layout/admin-sidebar.ejs') %>
+
+<main class="admin-main">
+    <%- include('../../components/layout/admin-topbar.ejs') %>
+
+    <div class="admin-content-wrapper p-4 p-md-5 overflow-hidden position-relative" style="min-height: calc(100vh - 80px);">
+        
+        <!-- Content Background Elements -->
+        <div class="position-absolute w-100 h-100 top-0 start-0 pointer-events-none z-0" style="opacity: 0.1;">
+            <div class="position-absolute kinetic-gradient rounded-circle" style="top: -10%; right: -5%; width: 600px; height: 600px; filter: blur(120px);"></div>
+            <div class="position-absolute rounded-circle" style="bottom: -5%; left: 10%; width: 400px; height: 400px; background-color: var(--ps-emerald); filter: blur(100px);"></div>
+        </div>
+
+        <div class="position-relative z-1 w-100 mx-auto" style="max-width: 900px;">
+            
+            <!-- Asymmetric Header Layout -->
+            <div class="d-flex flex-column flex-md-row align-items-md-end justify-content-between mb-5 gap-4">
+                <div class="position-relative">
+                    <div class="position-absolute fw-black font-headline user-select-none opacity-10" style="top: -2.5rem; left: -1.5rem; font-size: 6rem; color: var(--ps-emerald); z-index: -1;">
+                        01
+                    </div>
+                    <h2 class="display-3 fw-black font-headline text-dark tracking-tighter lh-1 mb-2 position-relative z-1">
+                        <%= court.id ? 'Modificar Cancha' : 'Nueva Cancha' %>
+                    </h2>
+                    <p class="text-secondary fw-medium fs-5 font-body mb-0" style="max-width: 450px;">
+                        <%= court.id ? 'Actualiza los datos del espacio deportivo.' : 'Registra un nuevo espacio deportivo en el sistema para habilitar reservas instantáneas.' %>
+                    </p>
+                </div>
+                <div class="d-flex gap-3 mb-2">
+                    <div class="bg-primary bg-opacity-10 text-primary rounded-3 text-uppercase fw-bold tracking-widest d-flex align-items-center gap-2 px-3 py-2" style="font-size: 0.75rem;">
+                        <span class="rounded-circle bg-primary" style="width: 8px; height: 8px; animation: pulse 2s infinite cubic-bezier(0.4, 0, 0.6, 1);"></span>
+                        Modo <%= court.id ? 'Edición' : 'Registro' %>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main Glass Card Form -->
+            <div class="card border border-white border-opacity-25 rounded-4 overflow-hidden position-relative shadow-lg glass-card">
+                
+                <!-- Visual Accent Decor -->
+                <div class="position-absolute top-0 end-0 kinetic-gradient opacity-10" style="width: 150px; height: 150px; border-bottom-left-radius: 100px; z-index: 0;"></div>
+                
+                <form action="<%= court.id ? '/admin/courts/edit/' + court.id : '/admin/courts/add' %>" method="POST" enctype="multipart/form-data" class="card-body p-4 p-md-5 position-relative z-1 d-flex flex-column gap-5">
+                    
+                    <%- include('../../components/layout/alert-error', { error: locals.error }) %>
+
+                    <!-- Row 1: Full Width Name -->
+                    <div>
+                        <label for="court_name" class="form-label text-uppercase fw-bold text-secondary tracking-widest" style="font-size: 0.75rem;">Nombre de la Cancha</label>
+                        <div class="position-relative custom-input-wrapper transition-all rounded-3 overflow-hidden">
+                            <input type="text" id="court_name" name="name" class="form-control border-0 bg-light py-4 px-4 fs-5 fw-medium shadow-none custom-input" 
+                                placeholder="Ej: Pista Central de Tenis 'El Olimpo'" value="<%= court.name || '' %>" required>
+                        </div>
+                    </div>
+
+                    <!-- Row 2: Grid Split -->
+                    <div class="row g-4">
+                        <div class="col-md-6">
+                            <label for="court_type_id" class="form-label text-uppercase fw-bold text-secondary tracking-widest" style="font-size: 0.75rem;">Categoría</label>
+                            <div class="position-relative custom-input-wrapper transition-all rounded-3 overflow-hidden">
+                                <select id="court_type_id" name="court_type_id" class="form-select border-0 bg-light py-4 px-4 fs-6 fw-medium shadow-none custom-input pointer" style="appearance: none;" required>
+                                    <option value="" disabled <%= !court.court_type_id ? 'selected' : '' %>>Selecciona deporte</option>
+                                    <% courtTypes.forEach(type => { %>
+                                        <option value="<%= type.id %>" <%= court.court_type_id === type.id ? 'selected' : '' %>><%= type.name %></option>
+                                    <% }) %>
+                                </select>
+                                <span class="material-symbols-outlined position-absolute text-secondary pointer-events-none" style="right: 1.25rem; top: 50%; transform: translateY(-50%);">expand_more</span>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="price_per_hour" class="form-label text-uppercase fw-bold text-secondary tracking-widest" style="font-size: 0.75rem;">Tarifa por Hora</label>
+                            <div class="position-relative custom-input-wrapper transition-all rounded-3 overflow-hidden d-flex align-items-center bg-light">
+                                <span class="material-symbols-outlined text-secondary ms-4 z-1">payments</span>
+                                <input id="price_per_hour" type="number" step="0.01" name="price_per_hour" class="form-control border-0 bg-transparent py-4 ps-3 pe-5 fs-5 fw-medium shadow-none custom-input" 
+                                    placeholder="0.00" value="<%= court.price_per_hour || '' %>" required>
+                                <div class="position-absolute fw-bold text-secondary" style="right: 1.25rem; font-size: 0.875rem;">USD</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Row 3: Status Toggle -->
+                    <div class="d-flex align-items-center justify-content-between p-4 rounded-3 hover-bg-surface bg-light transition-all">
+                        <div class="d-flex align-items-center gap-3">
+                            <div class="rounded-circle bg-primary bg-opacity-10 text-primary d-flex align-items-center justify-content-center" style="width: 48px; height: 48px;">
+                                <i class="material-symbols-outlined">bolt</i>
+                            </div>
+                            <div>
+                                <h4 class="fw-bold text-dark font-headline mb-0 fs-5">Estado de Operación</h4>
+                                <p class="text-secondary small mb-0">Habilita o deshabilita la cancha para reservas públicas de inmediato.</p>
+                            </div>
+                        </div>
+                        <div class="form-check form-switch fs-3 m-0">
+                            <input class="form-check-input pointer" type="checkbox" name="is_active" role="switch" aria-checked="<%= court.is_active !== false ? 'true' : 'false' %>" <%= court.is_active !== false ? 'checked' : '' %>>
+                        </div>
+                    </div>
+
+                    <!-- Media Section: Drag & Drop Area -->
+                    <div>
+                        <div class="form-label text-uppercase fw-bold text-secondary tracking-widest mb-2" style="font-size: 0.75rem;">Galería de Imágenes</div>
+                        
+                        <% if (court.image_url) { %>
+                            <div class="mb-3 p-3 rounded-4 border bg-white d-flex align-items-center gap-4">
+                                <img src="<%= court.image_url %>" alt="Vista miniatura actual de la cancha" class="rounded-3 object-fit-cover shadow-sm" style="width: 120px; height: 120px;">
+                                <div>
+                                    <h5 class="fw-bold mb-1">Imagen activa configurada</h5>
+                                    <p class="small text-secondary mb-0">Puedes reemplazarla seleccionando un nuevo archivo abajo.</p>
+                                </div>
+                            </div>
+                        <% } %>
+
+                        <label class="position-relative w-100 bg-light bg-opacity-50 border border-2 border-dashed rounded-4 overflow-hidden d-flex flex-column align-items-center justify-content-center gap-3 group transition-all pointer upload-area" style="height: 250px; border-color: rgba(0, 109, 55, 0.2);">
+                            <input type="file" name="image_url" accept="image/*" class="position-absolute w-100 h-100 opacity-0 pointer" style="z-index: 2;">
+                            
+                            <div class="upload-icon-container rounded-circle bg-white d-flex align-items-center justify-content-center text-primary shadow-sm transition-transform" style="width: 80px; height: 80px; z-index: 1;">
+                                <span class="material-symbols-outlined" style="font-size: 2.5rem;">add_photo_alternate</span>
+                            </div>
+                            
+                            <div class="text-center z-1">
+                                <p class="fw-bold text-dark mb-1 fs-5">Suelte las fotos aquí o <span class="text-primary text-decoration-underline pointer">busque</span></p>
+                                <p class="text-secondary small mb-0">Máximo 1 foto principal. Recomendado 1920x1080px.</p>
+                            </div>
+                        </label>
+                    </div>
+
+                    <!-- Action Buttons: Massive Editorial Scale -->
+                    <div class="row g-3 pt-2">
+                        <div class="col-md-3">
+                            <a href="/admin/courts" class="btn bg-light w-100 py-3 fw-bold text-secondary text-uppercase tracking-widest fs-6 d-flex flex-column align-items-center justify-content-center h-100 rounded-3 hover-bg-secondary transition-all">
+                                Cancelar
+                            </a>
+                        </div>
+                        <div class="col-md-9">
+                            <button type="submit" class="btn text-white w-100 py-4 fw-black font-headline fs-5 d-flex align-items-center justify-content-center gap-3 rounded-3 shadow-lg hover-scale transition-all kinetic-gradient border-0">
+                                ESTABLECER CANCHA
+                                <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Contextual Success Indicator (The Pulse Chip) -->
+    <div class="position-fixed" style="bottom: 2rem; right: 2rem; z-index: 50;">
+        <div class="bg-white px-4 py-3 rounded-pill d-flex align-items-center gap-3 shadow-sm border border-light">
+            <div class="position-relative" style="width: 12px; height: 12px;">
+                <span class="position-absolute top-0 start-0 w-100 h-100 bg-primary rounded-circle opacity-75" style="animation: ping 1.5s cubic-bezier(0, 0, 0.2, 1) infinite;"></span>
+                <span class="position-relative d-block w-100 h-100 bg-primary rounded-circle"></span>
+            </div>
+            <span class="text-uppercase fw-bold text-secondary tracking-widest" style="font-size: 0.70rem;">Sincronizado con Central</span>
+        </div>
+    </div>
+
+    <%- include('../../components/layout/footer.ejs') %>
+</main>
+
+<style>
+/* Utilities para recrear el Tailwind en Bootstrap puro */
+.tracking-widest { letter-spacing: 0.1em; }
+.tracking-tighter { letter-spacing: -0.05em; }
+.kinetic-gradient { background: linear-gradient(135deg, #006d37 0%, #2ecc71 100%); }
+.glass-card { background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); }
+.custom-input:focus { outline: none !important; box-shadow: none !important; background-color: #ffffff !important; }
+.custom-input-wrapper:focus-within { box-shadow: 0 0 0 3px rgba(0, 109, 55, 0.15); background-color: #ffffff !important; }
+.pointer { cursor: pointer; }
+.hover-bg-surface:hover { background-color: var(--ps-surface-container, #edeeef) !important; }
+.hover-bg-secondary:hover { background-color: var(--ps-surface-variant, #e1e3e4) !important; }
+.hover-scale { transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+.hover-scale:hover { transform: scale(1.02); }
+.hover-scale:active { transform: scale(0.98); }
+.upload-area:hover { border-color: var(--ps-emerald) !important; background-color: rgba(0, 109, 55, 0.02) !important; }
+.upload-area:hover .upload-icon-container { transform: scale(1.1); }
+@keyframes ping { 75%, 100% { transform: scale(2); opacity: 0; } }
+@keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: .5; } }
+</style>

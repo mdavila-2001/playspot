@@ -1,4 +1,5 @@
 const db = require('../models');
+const { Op } = require('sequelize');
 
 exports.getDashboard = async (req, res) => {
     try {
@@ -12,19 +13,43 @@ exports.getDashboard = async (req, res) => {
     }
 };
 
+/**
+ * Genera slots de horario (plantilla) para una cancha específica.
+ * No genera por fecha: crea slots reutilizables de hora en hora.
+ * El campo day_of_week puede ser null (aplica todos los días)
+ * o un número 0-6 (solo ese día de la semana).
+ */
 exports.generateSchedules = async (req, res) => {
     try {
         if (!req.session.userId || req.session.role !== 'admin') return res.status(401).send("No autorizado");
-        const { court_id, date, start_time, end_time } = req.body;
-        
+        const { court_id, start_time, end_time, day_of_week } = req.body;
+
         let currentHour = parseInt(start_time.split(':')[0]);
         const endHour = parseInt(end_time.split(':')[0]);
         const newSchedules = [];
 
+        const formatTime = (h) => `${h.toString().padStart(2, '0')}:00:00`;
+
         while (currentHour < endHour) {
             const nextHour = currentHour + 1;
-            const formatTime = (h) => `${h.toString().padStart(2, '0')}:00:00`;
-            newSchedules.push({ court_id, date, startTime: formatTime(currentHour), endTime: formatTime(nextHour), isAvailable: true });
+            // Evitar duplicados: verificar si ya existe ese slot
+            const existing = await db.Schedule.findOne({
+                where: {
+                    court_id,
+                    start_time: formatTime(currentHour),
+                    end_time: formatTime(nextHour),
+                    day_of_week: day_of_week || null
+                }
+            });
+
+            if (!existing) {
+                newSchedules.push({
+                    court_id,
+                    start_time: formatTime(currentHour),
+                    end_time: formatTime(nextHour),
+                    day_of_week: day_of_week ? parseInt(day_of_week) : null
+                });
+            }
             currentHour++;
         }
 
@@ -50,7 +75,7 @@ exports.getAllBookings = async (req, res) => {
                     include: [{ model: db.Court, as: 'court' }]
                 }
             ],
-            order: [[{ model: db.Schedule, as: 'schedule' }, 'date', 'DESC']]
+            order: [['date', 'DESC']]
         });
         res.render('admin/bookings', { user: currentUser, bookings, activePage: 'bookings' });
     } catch (error) {
@@ -63,20 +88,11 @@ exports.changeBookingStatus = async (req, res) => {
     try {
         if (!req.session.userId || req.session.role !== 'admin') return res.status(401).send("No admin");
         const { status } = req.body;
-        const booking = await db.Booking.findByPk(req.params.id, { include: ['schedule'] });
-        
+        const booking = await db.Booking.findByPk(req.params.id);
+
         if (booking) {
-            const oldStatus = booking.status;
             booking.status = status;
             await booking.save();
-            
-            if (status === 'cancelled') {
-                booking.schedule.isAvailable = true;
-                await booking.schedule.save();
-            } else if (oldStatus === 'cancelled' && (status === 'confirmed' || status === 'completed')) {
-                booking.schedule.isAvailable = false;
-                await booking.schedule.save();
-            }
         }
         res.redirect('/admin/bookings?success=status');
     } catch (error) {

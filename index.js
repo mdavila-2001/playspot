@@ -74,7 +74,9 @@ const seedCourts = async () => {
     }
 };
 
-db.sequelize.sync().then(async () => {
+// NOTA: { force: true } recrea las tablas con el nuevo esquema.
+// Una vez que el servidor arranque bien, cámbialo a sync({ alter: true }) o sync()
+db.sequelize.sync({ force: true }).then(async () => {
     console.log('Base de datos conectada');
     await seedAdmin();
     await seedCourts();

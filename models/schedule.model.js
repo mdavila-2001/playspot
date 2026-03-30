@@ -4,33 +4,24 @@ module.exports = (sequelize) => {
     const Schedule = sequelize.define(
         'Schedule',
         {
-            date: {
-                type: DataTypes.DATEONLY,
-                allowNull: false,
+            day_of_week: {
+                type: DataTypes.INTEGER,
+                allowNull: true,
+                validate: { min: 0, max: 6 }
             },
-            startTime: {
+            start_time: {
                 type: DataTypes.TIME,
                 allowNull: false,
             },
-            endTime: {
+            end_time: {
                 type: DataTypes.TIME,
                 allowNull: false,
-            },
-            isAvailable: {
-                type: DataTypes.BOOLEAN,
-                allowNull: false,
-                defaultValue: true
             }
         },
         {
             tableName: 'schedules',
             timestamps: true,
-            indexes: [
-                {
-                    fields: ['date', 'isAvailable']
-                }
-            ]
         }
     );
     return Schedule;
-}
+};

@@ -22,7 +22,12 @@ router.get('/dashboard', (req, res) => {
     }
 });
 
-router.get('/courts', courtController.getCourts);
+router.get('/admin/courts', courtController.index);
+router.get('/admin/courts/add', courtController.showCreate);
+router.post('/admin/courts/add', courtController.upload.single('image_url'), courtController.createCourt);
+router.get('/admin/courts/edit/:id', courtController.showEdit);
+router.post('/admin/courts/edit/:id', courtController.upload.single('image_url'), courtController.updateCourt);
+router.post('/admin/courts/delete/:id', courtController.deleteCourt);
 
 router.get('/admin/court-types', courtTypeController.index);
 router.get('/admin/court-types/add', courtTypeController.create);

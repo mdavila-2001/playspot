@@ -1,6 +1,4 @@
-<% if (locals.error) { %>
-<style>
-  .alert-kinetic {
+.alert-kinetic {
     background-color: #ffdad6; 
     color: #93000a; 
     border: none; 
@@ -10,11 +8,4 @@
     padding: 0.75rem 1rem;
     margin-bottom: 1.5rem;
     box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
-  }
-</style>
-
-<div class="alert alert-kinetic d-flex align-items-center" role="alert">
-  <span class="material-symbols-outlined fs-5 me-3">error</span>
-  <div class="small fw-bold mb-0"><%= error %></div>
-</div>
-<% } %>
+}

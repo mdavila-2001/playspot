@@ -5,7 +5,7 @@ exports.getDashboard = async (req, res) => {
         if (!req.session.userId || req.session.role !== 'admin') return res.redirect('/');
         const currentUser = await db.User.findByPk(req.session.userId);
         const courts = await db.Court.findAll();
-        res.render('admin/dashboard', { user: currentUser, courts });
+        res.render('admin/dashboard/dashboard', { user: currentUser, courts, activePage: 'dashboard' });
     } catch (error) {
         console.error(error);
         res.status(500).send("Error interno cargando dashboard");
@@ -52,7 +52,7 @@ exports.getAllBookings = async (req, res) => {
             ],
             order: [[{ model: db.Schedule, as: 'schedule' }, 'date', 'DESC']]
         });
-        res.render('admin/bookings', { user: currentUser, bookings });
+        res.render('admin/bookings', { user: currentUser, bookings, activePage: 'bookings' });
     } catch (error) {
         console.error(error);
         res.status(500).send("Error recuperando reservas globales");

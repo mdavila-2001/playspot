@@ -1,0 +1,8 @@
+<% if (locals.error) { %>
+<link rel="stylesheet" href="styles/alert-error.css">
+
+<div class="alert alert-kinetic d-flex align-items-center" role="alert">
+  <span class="material-symbols-outlined fs-5 me-3">error</span>
+  <div class="small fw-bold mb-0"><%= error %></div>
+</div>
+<% } %>

@@ -2,18 +2,34 @@ const express = require('express');
 const router = express.Router();
 
 const adminController = require('../controllers/admin.controller');
+const courtController = require('../controllers/admin/court.controller');
+const courtTypeController = require('../controllers/admin/court-type.controller');
 const clientController = require('../controllers/client.controller');
 
 router.get('/', (req, res) => {
+    res.redirect('/dashboard');
+});
+
+router.get('/dashboard', (req, res) => {
     if (!req.session.userId) {
         return res.redirect('/login');
     }
+    
     if (req.session.role === 'admin') {
-        return res.redirect('/admin/dashboard');
+        return adminController.getDashboard(req, res);
     } else {
-        return res.redirect('/client/catalog');
+        return clientController.getCatalog(req, res);
     }
 });
+
+router.get('/courts', courtController.getCourts);
+
+router.get('/admin/court-types', courtTypeController.index);
+router.get('/admin/court-types/add', courtTypeController.create);
+router.post('/admin/court-types/add', courtTypeController.store);
+router.get('/admin/court-types/edit/:id', courtTypeController.edit);
+router.post('/admin/court-types/edit/:id', courtTypeController.update);
+router.post('/admin/court-types/delete/:id', courtTypeController.destroy);
 
 router.get('/admin/dashboard', adminController.getDashboard);
 router.post('/admin/schedules', adminController.generateSchedules);

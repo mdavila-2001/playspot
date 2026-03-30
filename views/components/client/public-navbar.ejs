@@ -1,0 +1,16 @@
+<nav class="navbar navbar-expand-lg navbar-kinetic">
+    <div class="container">
+        <a class="navbar-brand display-brand fs-3" href="/">
+            <span style="color: var(--ps-emerald)">Play</span>Spot
+        </a>
+        <div class="d-flex gap-3">
+            <% if (locals.userName) { %>
+                <span class="align-self-center me-2">Hola, <strong><%= userName %></strong></span>
+                <a href="/logout" class="btn btn-outline-danger border-0">Salir</a>
+            <% } else { %>
+                <a href="/login" class="btn btn-link text-decoration-none text-dark fw-bold">Login</a>
+                <a href="/register" class="btn btn-dark px-4 rounded-3">Únete</a>
+            <% } %>
+        </div>
+    </div>
+</nav>

@@ -15,7 +15,7 @@ exports.index = async (req, res) => {
 
         const courtTypes = await db.CourtType.findAll({ order: [['createdAt', 'DESC']] });
         
-        res.render('admin/court-types/index', { 
+        res.render('admin/court-types/court-types', { 
             courtTypes, 
             user: currentUser,
             activePage: 'court-types'
@@ -31,7 +31,7 @@ exports.create = async (req, res) => {
         const currentUser = await getAdminUser(req, res);
         if (!currentUser) return;
 
-        res.render('admin/court-types/form', { 
+        res.render('admin/court-types/add', { 
             courtType: {}, 
             user: currentUser,
             activePage: 'court-types'

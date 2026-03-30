@@ -1,0 +1,52 @@
+:root {
+    --ps-emerald: #006d37;
+    --ps-primary-container: #2ecc71;
+    --ps-athletic-blue: #4e6073;
+    --ps-surface: #f8f9fa;
+    --ps-surface-container: #edeeef;
+    --ps-surface-lowest: #ffffff;
+    --ps-on-background: #191c1d;
+}
+
+body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background-color: var(--ps-surface);
+    color: var(--ps-on-background);
+    margin: 0;
+    overflow-x: hidden;
+}
+
+.text-primary {
+    color: var(--ps-emerald) !important;
+}
+
+.bg-primary {
+    background-color: var(--ps-emerald) !important;
+}
+
+.btn-primary {
+    background-color: var(--ps-emerald);
+    border-color: var(--ps-emerald);
+}
+
+.btn-primary:hover {
+    background-color: var(--ps-primary-container);
+    border-color: var(--ps-primary-container);
+}
+
+h1, h2, h3, .display-brand {
+    font-family: 'Lexend', sans-serif;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+}
+
+.section-container {
+    background-color: var(--ps-surface-container);
+    padding: 5rem 0;
+}
+
+.navbar-kinetic {
+    background-color: var(--ps-surface-lowest);
+    padding: 1.5rem 0;
+    box-shadow: 0 24px 48px -12px rgba(25, 28, 29, 0.08);
+}

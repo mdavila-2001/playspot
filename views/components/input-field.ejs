@@ -1,0 +1,111 @@
+<% 
+  const label = locals.label || '';
+  const name = locals.name || '';
+  const type = locals.type || 'text';
+  const placeholder = locals.placeholder || '';
+  const required = locals.required ? 'required' : '';
+  const icon = locals.icon || '';
+  const showToggle = locals.showToggle || false;
+%>
+
+<style>
+  .kinetic-input-group {
+      margin-bottom: 1.25rem;
+  }
+  
+  .kinetic-label {
+      font-size: 0.75rem; 
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em; 
+      color: var(--ps-athletic-blue, #4e6073); 
+      margin-bottom: 0.5rem;
+  }
+  
+  .kinetic-input-wrapper {
+      position: relative;
+  }
+
+  .form-control-kinetic {
+      background-color: rgba(225, 227, 228, 0.4);
+      border: none;
+      border-radius: 0.5rem;
+      padding: 0.75rem 1rem;
+      transition: all 0.2s ease;
+      width: 100%;
+      color: var(--ps-on-background, #191c1d);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+  }
+
+  .form-control-kinetic.has-toggle {
+      padding-right: 3rem;
+  }
+  
+  .form-control-kinetic:focus {
+      background-color: white; 
+      box-shadow: 0 0 0 2px var(--ps-emerald, #006d37); 
+      outline: none;
+  }
+  
+  .form-control-kinetic::placeholder {
+      color: #94a3b8; 
+  }
+
+  .toggle-password-btn {
+      position: absolute;
+      right: 0.75rem;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      padding: 0;
+      cursor: pointer;
+      color: var(--ps-athletic-blue, #4e6073);
+      display: flex;
+      align-items: center;
+      transition: color 0.2s ease;
+  }
+
+  .toggle-password-btn:hover {
+      color: var(--ps-emerald, #006d37);
+  }
+
+  .toggle-password-btn .material-symbols-outlined {
+      font-size: 1.25rem;
+  }
+</style>
+
+<div class="kinetic-input-group">
+  <label for="<%= name %>" class="kinetic-label d-flex align-items-center gap-2">
+      <% if (icon) { %>
+          <span class="material-symbols-outlined" style="font-size: 1rem;"><%= icon %></span>
+      <% } %>
+      <%= label %>
+  </label>
+  <div class="kinetic-input-wrapper">
+    <input 
+      type="<%= type %>" 
+      name="<%= name %>" 
+      id="<%= name %>" 
+      class="form-control form-control-kinetic <%= showToggle ? 'has-toggle' : '' %>" 
+      placeholder="<%= placeholder %>"
+      <%= required %>
+    >
+    <% if (showToggle) { %>
+    <button type="button" class="toggle-password-btn" aria-label="Mostrar u ocultar contraseña"
+      onclick="(function(btn) {
+        const input = btn.parentElement.querySelector('input');
+        const icon = btn.querySelector('.material-symbols-outlined');
+        if (input.type === 'password') {
+          input.type = 'text';
+          icon.textContent = 'visibility_off';
+        } else {
+          input.type = 'password';
+          icon.textContent = 'visibility';
+        }
+      })(this)">
+      <span class="material-symbols-outlined">visibility</span>
+    </button>
+    <% } %>
+  </div>
+</div>

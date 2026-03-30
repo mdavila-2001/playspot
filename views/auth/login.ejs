@@ -1,0 +1,98 @@
+<%- include('../components/layout/header.ejs', { title: 'Iniciar Sesión' }) %>
+<link rel="stylesheet" href="/auth/login.css">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
+
+<div class="login-wrapper">
+    <div class="login-bg-image">
+        <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuDZ5RYhUgaf5rWGwU7tKsZY2pRSj2HZOwk58mriSOvYvdDcrZMuWfqDHwGp1tQtplLObAjgsUGj19qGkpeFaaWL4R3a0KNFgbxSi755SSXV3-R4G5gMSS0JHOL9JdEAJw8UwYUpz0fbWib4oU1gu4gzE4t-aut9r4khTm6vCZc7b1-tGMvtxv3nDqijxGqcvdf7mOHm80NVdWxob-twF6f6GFmiMAZeQiq2EOHf-DSCgcjLv6l01A6M7LHDMHIi2lpIwMjW6G2h522r" 
+             alt="Tennis Court" 
+             class="w-100 h-100 object-fit-cover">
+        <div class="login-bg-overlay"></div>
+    </div>
+
+    <div class="decor-circle decor-top-right d-none d-lg-block"></div>
+    <div class="decor-circle decor-bottom-left d-none d-lg-block"></div>
+
+    <main class="login-content">
+        <div class="text-center mb-4">
+            <h1 class="brand-title">PlaySpot</h1>
+            <h2 class="login-subtitle">¡Bienvenido de nuevo!</h2>
+            <p class="login-desc">Ingresa para reservar tu cancha</p>
+        </div>
+
+        <div class="login-card">
+            <%- include('../components/alert-error', { error: locals.error }) %>
+            <!-- Alerta de validación cliente (JS) -->
+            <div id="clientAlert" class="alert alert-kinetic-client d-none d-flex align-items-center mb-0" role="alert">
+                <span class="material-symbols-outlined fs-5 me-3">error</span>
+                <div class="small fw-bold mb-0" id="clientAlertMsg"></div>
+            </div>
+
+            <form id="loginForm" action="/login" method="POST" class="d-flex flex-column gap-3 mb-0">
+                <%- include('../components/input-field', { 
+                    label: 'Correo Electrónico', 
+                    name: 'email', 
+                    type: 'email', 
+                    placeholder: 'ejemplo@correo.com',
+                    icon: 'mail'
+                }) %>
+
+                <%- include('../components/input-field', { 
+                    label: 'Contraseña', 
+                    name: 'password', 
+                    type: 'password', 
+                    placeholder: '••••••••',
+                    icon: 'lock',
+                    showToggle: true
+                }) %>
+
+                <div class="d-flex justify-content-between align-items-center py-2">
+                    <label class="d-flex align-items-center gap-2 small fw-medium text-secondary" style="cursor: pointer;">
+                        <input class="form-check-input mt-0 rounded border-secondary shadow-none" type="checkbox" id="remember">
+                        Recordarme
+                    </label>
+                    <a href="#" class="small fw-bold" style="color: var(--ps-emerald); text-decoration: none;">¿Olvidaste tu clave?</a>
+                </div>
+
+                <%- include('../components/button-primary', { 
+                    text: 'Iniciar Sesión', 
+                    type: 'submit' 
+                }) %>
+            </form>
+
+            <div class="mt-4 pt-4 text-center border-top">
+                <p class="small text-muted mb-0">
+                    ¿No tienes cuenta? 
+                    <a href="/register" class="fw-bold text-decoration-none" style="color: var(--ps-emerald);">Regístrate aquí</a>
+                </p>
+            </div>
+        </div>
+
+        <p class="mt-5 text-center px-4 fw-bold text-uppercase" style="color: rgba(78, 96, 115, 0.6); font-size: 0.75rem; letter-spacing: 0.1em; line-height: 1.8;">
+            Impulsando el deporte profesional en cada rincón de la ciudad.
+        </p>
+    </main>
+</div>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const form = document.getElementById('loginForm');
+        const clientAlert = document.getElementById('clientAlert');
+        const clientAlertMsg = document.getElementById('clientAlertMsg');
+
+        function showClientAlert(msg) {
+            clientAlertMsg.textContent = msg;
+            clientAlert.classList.remove('d-none');
+        }
+
+        form.addEventListener('submit', (e) => {
+            const email = document.querySelector('input[name="email"]').value.trim();
+            const password = document.querySelector('input[name="password"]').value.trim();
+
+            if (!email || !password) {
+                e.preventDefault();
+                showClientAlert('Por favor, completa todos los campos para continuar.');
+            }
+        });
+    });
+</script>
+<%- include('../components/layout/footer.ejs') %>

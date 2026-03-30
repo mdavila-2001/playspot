@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Gestión de Reservas - PlaySpot Admin</title>
+    <link rel="stylesheet" href="/admin/bookings.css">
+</head>
+<body>
+    <div class="navbar">
+        <h1>PlaySpot <span style="font-size: 0.8rem; color: #64748b; margin-left:10px;">PANEL ADMIN</span></h1>
+        <span>
+            <a href="/admin/dashboard" style="color: #cbd5e1; text-decoration: none; margin-right: 1.5rem; font-weight: 500;">← Volver al Creador de Horarios</a>
+            Hola, <%= user.name %> 
+            <a href="/logout" class="btn-logout" style="margin-left: 1rem;">Salir</a>
+        </span>
+    </div>
+
+    <div class="container">
+        <h2>Listado Global de Reservas</h2>
+        <p style="color: #94a3b8; margin-bottom: 2rem;">Administra las reservas de los clientes. Al marcar una reserva como "Completada/Finalizada", el cliente podrá dejarle una reseña a la cancha.</p>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Fecha y Hora</th>
+                    <th>Cancha</th>
+                    <th>Cliente / Email</th>
+                    <th>Estado</th>
+                    <th>Acción Manual</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% if(bookings.length > 0) { %>
+                    <% bookings.forEach(booking => { %>
+                        <tr>
+                            <td>
+                                <strong><%= booking.schedule.date %></strong><br>
+                                <span style="color: #94a3b8; font-size: 0.85rem;"><%= booking.schedule.startTime.substring(0, 5) %> - <%= booking.schedule.endTime.substring(0, 5) %></span>
+                            </td>
+                            <td><%= booking.schedule.court.name %></td>
+                            <td>
+                                <%= booking.user.name %><br>
+                                <span style="color: #94a3b8; font-size: 0.85rem;"><%= booking.user.email %></span>
+                            </td>
+                            <td>
+                                <span class="badge <%= booking.status === 'confirmed' ? 'badge-confirmed' : booking.status === 'completed' ? 'badge-completed' : 'badge-cancelled' %>">
+                                    <%= booking.status %>
+                                </span>
+                            </td>
+                            <td>
+                                <% if(booking.status === 'confirmed') { %>
+                                    <form action="/admin/bookings/<%= booking.id %>/status" method="POST" style="display:inline;">
+                                        <input type="hidden" name="status" value="completed">
+                                        <button type="submit" class="btn-action">Marcar Finalizada</button>
+                                    </form>
+                                    <form action="/admin/bookings/<%= booking.id %>/status" method="POST" style="display:inline; margin-left: 0.5rem;">
+                                        <input type="hidden" name="status" value="cancelled">
+                                        <button type="submit" class="btn-action" style="color: #fca5a5; border-color: #7f1d1d;">Cancelar</button>
+                                    </form>
+                                <% } else { %>
+                                    <span style="color: #64748b; font-size: 0.85rem; font-style: italic;">No aplicable</span>
+                                <% } %>
+                            </td>
+                        </tr>
+                    <% }) %>
+                <% } else { %>
+                    <tr><td colspan="5" style="text-align:center; padding: 2rem; color: #64748b;">No hay reservas registradas en el sistema todavía.</td></tr>
+                <% } %>
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>

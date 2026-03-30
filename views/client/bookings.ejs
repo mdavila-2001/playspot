@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Mis Reservas - PlaySpot</title>
+    <link rel="stylesheet" href="/client/bookings.css">
+</head>
+<body>
+    <div class="navbar">
+        <h1>PlaySpot</h1>
+        <span>
+            <a href="/client/catalog" style="color: #cbd5e1; text-decoration: none; margin-right: 1.5rem; font-weight: 500;">Ver Catálogo</a>
+            Hola, <%= user.name %> 
+            <a href="/logout" class="btn-logout" style="margin-left: 1rem;">Salir</a>
+        </span>
+    </div>
+
+    <div class="container">
+        <h2>Reservas Activas / Confirmadas</h2>
+        <% if(activeBookings.length > 0) { %>
+            <% activeBookings.forEach(booking => { %>
+                <div class="card">
+                    <div class="card-info">
+                        <h4><%= booking.schedule.court.name %></h4>
+                        <p>Fecha: <strong><%= booking.schedule.date %></strong></p>
+                        <p>Horario: <strong><%= booking.schedule.startTime.substring(0, 5) %> - <%= booking.schedule.endTime.substring(0, 5) %></strong></p>
+                    </div>
+                    <div>
+                        <form action="/client/bookings/<%= booking.id %>/cancel" method="POST" onsubmit="return confirm('¿Seguro que deseas cancelar tu turno? Esta acción no se puede deshacer.');">
+                            <button type="submit" class="btn-cancel">Cancelar Reserva</button>
+                        </form>
+                    </div>
+                </div>
+            <% }) %>
+        <% } else { %>
+            <div class="empty">No tienes turnos pendientes por jugar.</div>
+        <% } %>
+
+        <br>
+
+        <h2>Historial y Reservas Pasadas</h2>
+        <% if(pastBookings.length > 0) { %>
+            <% pastBookings.forEach(booking => { %>
+                <div class="card" style="opacity: 0.85; flex-wrap: wrap;">
+                    <div class="card-info">
+                        <h4><%= booking.schedule.court.name %> 
+                            <span class="badge <%= booking.status === 'completed' ? 'badge-completed' : 'badge-cancelled' %>" style="margin-left: 1rem;">
+                                <%= booking.status === 'completed' ? 'FINALIZADO' : 'CANCELADO' %>
+                            </span>
+                        </h4>
+                        <p>Fecha: <%= booking.schedule.date %> | Hora: <%= booking.schedule.startTime.substring(0, 5) %></p>
+                    </div>
+                    
+                    <% if(booking.status === 'completed') { %>
+                        <div class="review-box">
+                            <form action="/client/bookings/review" method="POST">
+                                <p style="margin:0 0 0.5rem 0; font-size: 0.85rem; color:#cbd5e1;">¿Qué te pareció la cancha?</p>
+                                <input type="hidden" name="court_id" value="<%= booking.schedule.court.id %>">
+                                <select name="rating" required>
+                                    <option value="">Seleccionar puntaje</option>
+                                    <option value="5">5 Puntos - Excelente</option>
+                                    <option value="4">4 Puntos - Muy Buena</option>
+                                    <option value="3">3 Puntos - Regular</option>
+                                    <option value="2">2 Puntos - Mala</option>
+                                    <option value="1">1 Punto - Deficiente</option>
+                                </select>
+                                <input type="text" name="comment" placeholder="Breve comentario (Opcional)" maxlength="100">
+                                <button type="submit" class="btn-review">Enviar Reseña Pública</button>
+                            </form>
+                        </div>
+                    <% } %>
+                </div>
+            <% }) %>
+        <% } else { %>
+            <div class="empty">Tu historial está vacío.</div>
+        <% } %>
+    </div>
+</body>
+</html>

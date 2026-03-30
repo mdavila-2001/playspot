@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Dashboard - PlaySpot</title>
+    <link rel="stylesheet" href="/admin/dashboard.css">
+</head>
+<body>
+    <div class="navbar">
+        <h1>PlaySpot <span style="font-size: 0.8rem; color: #64748b; margin-left:10px;">PANEL ADMIN</span></h1>
+        <span>
+            <a href="/admin/bookings" style="color: #cbd5e1; text-decoration: none; margin-right: 1.5rem; font-weight: 500;">Gestión de Reservas</a>
+            Hola, <%= user.name %> 
+            <a href="/logout" class="btn-logout" style="margin-left: 1rem;">Salir</a>
+        </span>
+    </div>
+
+    <div class="container">
+        <h2>Generar Horarios y Turnos</h2>
+        <p style="color: #94a3b8; margin-bottom: 2rem; line-height: 1.5;">Selecciona la cancha, el día y los topes de horarios que permitirás reservas. El sistema creará automáticamente los bloques disponibles de 1 hora.</p>
+
+        <form action="/admin/schedules" method="POST">
+            <div class="form-group">
+                <label for="court_id">Cancha:</label>
+                <select name="court_id" id="court_id" required>
+                    <option value="">-- Selecciona una Cancha --</option>
+                    <% courts.forEach(court => { %>
+                        <option value="<%= court.id %>"><%= court.name %> (Precio: $<%= court.price_per_hour %>)</option>
+                    <% }); %>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="date">Fecha (Día a crear turnos):</label>
+                <input type="date" name="date" id="date" required>
+            </div>
+            
+            <div style="display: flex; gap: 1rem;">
+                <div class="form-group" style="flex: 1;">
+                    <label for="start_time">Hora Inicio:</label>
+                    <select name="start_time" id="start_time" required>
+                        <option value="">Seleccionar Hora</option>
+                        <% for(let h=7; h<=22; h++) { let hh = h.toString().padStart(2, '0') + ':00'; %>
+                            <option value="<%= hh %>"><%= hh %></option>
+                        <% } %>
+                    </select>
+                </div>
+                <div class="form-group" style="flex: 1;">
+                    <label for="end_time">Hora Fin:</label>
+                    <select name="end_time" id="end_time" required>
+                        <option value="">Seleccionar Hora</option>
+                        <% for(let h=8; h<=23; h++) { let hh = h.toString().padStart(2, '0') + ':00'; %>
+                            <option value="<%= hh %>"><%= hh %></option>
+                        <% } %>
+                    </select>
+                </div>
+            </div>
+            
+            <button type="submit" class="btn-submit">Generar Turnos Automáticos</button>
+        </form>
+    </div>
+
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        if(urlParams.get('success') === '1') {
+            const container = document.querySelector('.container');
+            const alertMsg = document.createElement('div');
+            alertMsg.className = 'alert';
+            alertMsg.innerText = '¡Horarios generados correctamente en la base de datos!';
+            container.insertBefore(alertMsg, container.querySelector('h2'));
+            
+            // Clean URL
+            window.history.replaceState({}, document.title, "/admin/dashboard");
+        }
+    </script>
+</body>
+</html>

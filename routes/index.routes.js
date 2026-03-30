@@ -5,6 +5,7 @@ const adminController = require('../controllers/admin.controller');
 const courtController = require('../controllers/admin/court.controller');
 const courtTypeController = require('../controllers/admin/court-type.controller');
 const clientController = require('../controllers/client.controller');
+const scheduleController = require('../controllers/admin/schedule.controller');
 
 router.get('/', (req, res) => {
     res.redirect('/dashboard');
@@ -36,7 +37,10 @@ router.get('/admin/court-types/edit/:id', courtTypeController.edit);
 router.post('/admin/court-types/edit/:id', courtTypeController.update);
 router.post('/admin/court-types/delete/:id', courtTypeController.destroy);
 
-router.post('/admin/schedules', adminController.generateSchedules);
+router.get('/admin/schedules', scheduleController.getSchedules);
+
+router.post('/admin/schedules/generate', scheduleController.generateSchedules);
+router.post('/admin/schedules/delete/:id', scheduleController.deleteSchedule);
 router.get('/admin/bookings', adminController.getAllBookings);
 router.post('/admin/bookings/:id/status', adminController.changeBookingStatus);
 

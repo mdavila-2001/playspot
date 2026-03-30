@@ -13,12 +13,6 @@ exports.getDashboard = async (req, res) => {
     }
 };
 
-/**
- * Genera slots de horario (plantilla) para una cancha específica.
- * No genera por fecha: crea slots reutilizables de hora en hora.
- * El campo day_of_week puede ser null (aplica todos los días)
- * o un número 0-6 (solo ese día de la semana).
- */
 exports.generateSchedules = async (req, res) => {
     try {
         if (!req.session.userId || req.session.role !== 'admin') return res.status(401).send("No autorizado");

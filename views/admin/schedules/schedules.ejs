@@ -12,49 +12,62 @@
 
                         <form action="/admin/schedules/generate" method="POST" class="row g-7 align-items-end">
                             <div class="col-md-3">
-                                <label
-                                    class="font-label small fw-bold text-uppercase text-secondary mb-2 letter-spacing-1"
-                                    style="font-size: 0.7rem;">Selección de Cancha</label>
-                                <select name="cancha_id" class="form-select bg-white border-0 py-3 shadow-sm rounded-3"
-                                    required>
-                                    <option value="" disabled selected>Elige una cancha...</option>
-                                    <% courts.forEach(court=> { %>
-                                        <option value="<%= court.id %>">
-                                            <%= court.name %>
-                                        </option>
+                                <div class="kinetic-input-group" style="margin-bottom: 1.25rem;">
+                                    <label
+                                        class="font-label fw-bold text-uppercase mb-2 d-flex align-items-center gap-2"
+                                        style="font-size: 0.75rem; color: #4e6073; letter-spacing: 0.05em;">
+                                        <span class="material-symbols-outlined" style="font-size: 1rem;">stadium</span>
+                                        Selección de Cancha
+                                    </label>
+                                    <select name="cancha_id" class="form-select bg-white border-0 py-3 shadow-sm rounded-3"
+                                        required style="background-color: rgba(225, 227, 228, 0.4) !important; color: #191c1d;">
+                                        <option value="" disabled selected>Elige una cancha...</option>
+                                        <% courts.forEach(court=> { %>
+                                            <option value="<%= court.id %>">
+                                                <%= court.name %>
+                                            </option>
                                         <% }) %>
-                                </select>
+                                    </select>
+                                </div>
                             </div>
 
                             <div class="col-md-3">
-                                <label
-                                    class="font-label small fw-bold text-uppercase text-secondary mb-2 letter-spacing-1"
-                                    style="font-size: 0.7rem;">Fecha</label>
-                                <input type="date" name="fecha"
-                                    class="form-control bg-white border-0 py-3 shadow-sm rounded-3" required>
+                                <%- include('../../components/input-field.ejs', {
+                                    label: 'Fecha',
+                                    name: 'fecha',
+                                    type: 'date',
+                                    required: true,
+                                    icon: 'calendar_today'
+                                }) %>
                             </div>
 
                             <div class="col-md-2">
-                                <label
-                                    class="font-label small fw-bold text-uppercase text-secondary mb-2 letter-spacing-1"
-                                    style="font-size: 0.7rem;">Hora Inicio</label>
-                                <input type="time" name="start_time"
-                                    class="form-control bg-white border-0 py-3 shadow-sm rounded-3" required>
+                                <%- include('../../components/input-field.ejs', {
+                                    label: 'Hora Inicio',
+                                    name: 'start_time',
+                                    type: 'time',
+                                    required: true,
+                                    icon: 'schedule'
+                                }) %>
                             </div>
 
                             <div class="col-md-2">
-                                <label
-                                    class="font-label small fw-bold text-uppercase text-secondary mb-2 letter-spacing-1"
-                                    style="font-size: 0.7rem;">Hora Fin</label>
-                                <input type="time" name="end_time"
-                                    class="form-control bg-white border-0 py-3 shadow-sm rounded-3" required>
+                                <%- include('../../components/input-field.ejs', {
+                                    label: 'Hora Fin',
+                                    name: 'end_time',
+                                    type: 'time',
+                                    required: true,
+                                    icon: 'update'
+                                }) %>
                             </div>
 
                             <div class="col-md-2">
-                                <button type="submit"
-                                    class="btn btn-primary w-100 py-3 fw-bold text-uppercase shadow-sm d-flex justify-content-center align-items-center gap-2 rounded-3 text-white">
-                                    <i class="bi bi-plus-circle"></i> Generar
-                                </button>
+                                <div style="margin-bottom: 20px;">
+                                    <%- include('../../components/button-primary.ejs', {
+                                        text: 'Generar',
+                                        type: 'submit'
+                                    }) %>
+                                </div>
                             </div>
                         </form>
                     </section>

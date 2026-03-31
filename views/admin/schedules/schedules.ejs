@@ -3,7 +3,7 @@
 
         <main class="admin-main">
             <%- include('../../components/layout/admin-topbar.ejs') %>
-                <div class="admin-content-wrapper p-4 p-lg-5 max-w-7xl mx-auto space-y-5">
+                <div class="admin-content-wrapper p-4 p-lg-5 space-y-5">
 
                     <section class="bg-surface-container-low rounded-4 p-4 p-md-5 shadow-sm mb-5 border-0">
                         <h2 class="font-headline fs-4 fw-bold text-dark mb-4 d-flex align-items-center gap-2">
@@ -13,13 +13,13 @@
                         <form action="/admin/schedules/generate" method="POST" class="row g-7 align-items-end">
                             <div class="col-md-3">
                                 <div class="kinetic-input-group" style="margin-bottom: 1.25rem;">
-                                    <label
+                                    <label for="cancha_id"
                                         class="font-label fw-bold text-uppercase mb-2 d-flex align-items-center gap-2"
                                         style="font-size: 0.75rem; color: #4e6073; letter-spacing: 0.05em;">
                                         <span class="material-symbols-outlined" style="font-size: 1rem;">stadium</span>
                                         Selección de Cancha
                                     </label>
-                                    <select name="cancha_id" class="form-select bg-white border-0 py-3 shadow-sm rounded-3"
+                                    <select id="cancha_id" name="cancha_id" class="form-select bg-white border-0 py-3 shadow-sm rounded-3"
                                         required style="background-color: rgba(225, 227, 228, 0.4) !important; color: #191c1d;">
                                         <option value="" disabled selected>Elige una cancha...</option>
                                         <% courts.forEach(court=> { %>

@@ -20,8 +20,10 @@ scheduleController.getSchedules = async (req, res) => {
             ]
         });
 
+        const currentUser = await db.User.findByPk(req.session.userId);
+
         res.render('admin/schedules/schedules', {
-            userName: req.session.userName || 'Admin',
+            user: currentUser,
             activePage: 'schedules',
             courts,
             schedules

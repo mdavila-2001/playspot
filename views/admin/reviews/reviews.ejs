@@ -1,0 +1,70 @@
+<%- include('../../components/layout/header.ejs', { title: 'Reseñas | Admin' }) %>
+<%- include('../../components/layout/admin-sidebar.ejs') %>
+
+<main class="admin-main">
+    <%- include('../../components/layout/admin-topbar.ejs') %>
+    <div class="admin-content-wrapper p-4 p-lg-5">
+        
+        <header class="mb-5">
+            <h1 class="display-5 fw-black font-headline tracking-tight text-dark">RESEÑAS DE LA COMUNIDAD</h1>
+            <p class="text-secondary fw-medium">Feedback directo de los usuarios sobre las instalaciones.</p>
+        </header>
+
+        <div class="bg-white rounded-4 shadow-sm overflow-hidden border border-light">
+            <table class="table table-borderless table-hover mb-0 align-middle">
+                <thead class="bg-surface-container text-secondary font-label small text-uppercase letter-spacing-1">
+                    <tr>
+                        <th class="px-4 py-3" style="width: 20%;">Usuario</th>
+                        <th class="px-4 py-3" style="width: 20%;">Cancha</th>
+                        <th class="px-4 py-3" style="width: 15%;">Calificación</th>
+                        <th class="px-4 py-3" style="width: 35%;">Comentario</th>
+                        <th class="px-4 py-3 text-end" style="width: 10%;">Acción</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% if (reviews && reviews.length > 0) { %>
+                        <% reviews.forEach(review => { %>
+                            <tr class="border-bottom border-light">
+                                <td class="px-4 py-4">
+                                    <div class="fw-bold text-dark font-lexend"><%= review.user.name %></div>
+                                </td>
+                                <td class="px-4 py-4">
+                                    <span class="badge bg-emerald-subtle rounded-pill px-3 py-2 fw-bold">
+                                        <%= review.court.name %>
+                                    </span>
+                                </td>
+                                <td class="px-4 py-4">
+                                    <div class="text-warning">
+                                        <% for(let i=1; i<=5; i++) { %>
+                                            <i class="bi <%= i <= review.rating ? 'bi-star-fill' : 'bi-star' %>"></i>
+                                        <% } %>
+                                    </div>
+                                </td>
+                                <td class="px-4 py-4">
+                                    <p class="mb-0 text-secondary small fst-italic">
+                                        "<%= review.comment %>"
+                                    </p>
+                                </td>
+                                <td class="px-4 py-4 text-end">
+                                    <form action="/admin/reviews/delete/<%= review.id %>" method="POST" class="m-0">
+                                        <button type="submit" class="btn btn-sm btn-light text-danger border-0 rounded-3">
+                                            <i class="bi bi-trash3-fill"></i>
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                        <% }) %>
+                    <% } else { %>
+                        <tr>
+                            <td colspan="5" class="text-center py-5 text-muted">
+                                <i class="bi bi-chat-left-text fs-1 d-block mb-2"></i>
+                                Aún no hay reseñas registradas.
+                            </td>
+                        </tr>
+                    <% } %>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <%- include('../../components/layout/footer.ejs') %>
+</main>

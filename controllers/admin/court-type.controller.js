@@ -49,7 +49,7 @@ exports.store = async (req, res) => {
 
         const { name } = req.body;
         if (!name || name.trim() === '') {
-            return res.render('admin/court-types/form', { 
+            return res.render('admin/court-types/add', { 
                 courtType: { name }, 
                 user: currentUser,
                 activePage: 'court-types',
@@ -73,7 +73,7 @@ exports.edit = async (req, res) => {
         const courtType = await db.CourtType.findByPk(req.params.id);
         if (!courtType) return res.redirect('/admin/court-types');
 
-        res.render('admin/court-types/form', { 
+        res.render('admin/court-types/add', { 
             courtType, 
             user: currentUser,
             activePage: 'court-types'
@@ -95,7 +95,7 @@ exports.update = async (req, res) => {
         if (!courtType) return res.redirect('/admin/court-types');
 
         if (!name || name.trim() === '') {
-            return res.render('admin/court-types/form', { 
+            return res.render('admin/court-types/add', { 
                 courtType: { ...courtType.toJSON(), name }, 
                 user: currentUser,
                 activePage: 'court-types',

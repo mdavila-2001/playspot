@@ -7,6 +7,7 @@ const courtTypeController = require('../controllers/admin/court-type.controller'
 const clientController = require('../controllers/client.controller');
 const scheduleController = require('../controllers/admin/schedule.controller');
 const bookingController = require('../controllers/admin/booking.controller');
+const reviewController = require('../controllers/admin/review.controller');
 
 router.get('/', (req, res) => {
     res.redirect('/dashboard');
@@ -46,6 +47,9 @@ router.get('/admin/bookings', bookingController.listBookings);
 router.post('/admin/bookings/confirm/:id', bookingController.confirmBooking);
 router.post('/admin/bookings/cancel/:id', bookingController.cancelBooking);
 router.post('/admin/bookings/update-status/:id', bookingController.updateStatus);
+
+router.get('/admin/reviews', reviewController.listReviews);
+router.post('/admin/reviews/delete/:id', reviewController.deleteReview);
 
 router.get('/client/catalog', clientController.getCatalog);
 router.post('/client/bookings', clientController.createBooking);

@@ -1,0 +1,169 @@
+<%- include('../../components/layout/header.ejs', { title: 'Gestión de Horarios | PlaySpot Admin' }) %>
+    <%- include('../../components/layout/admin-sidebar.ejs') %>
+
+        <main class="admin-main">
+            <%- include('../../components/layout/admin-topbar.ejs') %>
+                <div class="admin-content-wrapper p-4 p-lg-5 max-w-7xl mx-auto space-y-5">
+
+                    <section class="bg-surface-container-low rounded-4 p-4 p-md-5 shadow-sm mb-5 border-0">
+                        <h2 class="font-headline fs-4 fw-bold text-dark mb-4 d-flex align-items-center gap-2">
+                            <i class="bi bi-lightning-charge-fill text-emerald"></i> Generar Disponibilidad
+                        </h2>
+
+                        <form action="/admin/schedules/generate" method="POST" class="row g-7 align-items-end">
+                            <div class="col-md-3">
+                                <div class="kinetic-input-group" style="margin-bottom: 1.25rem;">
+                                    <label
+                                        class="font-label fw-bold text-uppercase mb-2 d-flex align-items-center gap-2"
+                                        style="font-size: 0.75rem; color: #4e6073; letter-spacing: 0.05em;">
+                                        <span class="material-symbols-outlined" style="font-size: 1rem;">stadium</span>
+                                        Selección de Cancha
+                                    </label>
+                                    <select name="cancha_id" class="form-select bg-white border-0 py-3 shadow-sm rounded-3"
+                                        required style="background-color: rgba(225, 227, 228, 0.4) !important; color: #191c1d;">
+                                        <option value="" disabled selected>Elige una cancha...</option>
+                                        <% courts.forEach(court=> { %>
+                                            <option value="<%= court.id %>">
+                                                <%= court.name %>
+                                            </option>
+                                        <% }) %>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-md-3">
+                                <%- include('../../components/input-field.ejs', {
+                                    label: 'Fecha',
+                                    name: 'fecha',
+                                    type: 'date',
+                                    required: true,
+                                    icon: 'calendar_today'
+                                }) %>
+                            </div>
+
+                            <div class="col-md-2">
+                                <%- include('../../components/input-field.ejs', {
+                                    label: 'Hora Inicio',
+                                    name: 'start_time',
+                                    type: 'time',
+                                    required: true,
+                                    icon: 'schedule'
+                                }) %>
+                            </div>
+
+                            <div class="col-md-2">
+                                <%- include('../../components/input-field.ejs', {
+                                    label: 'Hora Fin',
+                                    name: 'end_time',
+                                    type: 'time',
+                                    required: true,
+                                    icon: 'update'
+                                }) %>
+                            </div>
+
+                            <div class="col-md-2">
+                                <div style="margin-bottom: 20px;">
+                                    <%- include('../../components/button-primary.ejs', {
+                                        text: 'Generar',
+                                        type: 'submit'
+                                    }) %>
+                                </div>
+                            </div>
+                        </form>
+                    </section>
+
+                    <section>
+                        <div class="d-flex justify-content-between align-items-end mb-4">
+                            <div>
+                                <h2 class="font-headline fs-2 fw-black text-dark mb-1 tracking-tight">Horarios Activos
+                                </h2>
+                                <p class="text-secondary fw-medium small mb-0">Control de franjas horarias y estado de
+                                    ocupación.</p>
+                            </div>
+                        </div>
+
+                        <div class="bg-white rounded-4 overflow-hidden shadow-sm border border-light">
+                            <table class="table table-borderless table-hover mb-0 align-middle">
+                                <thead
+                                    class="bg-surface-container text-secondary font-label small text-uppercase letter-spacing-1">
+                                    <tr>
+                                        <th class="px-4 py-3 fw-bold">Cancha</th>
+                                        <th class="px-4 py-3 fw-bold">Fecha</th>
+                                        <th class="px-4 py-3 fw-bold">Rango Horario</th>
+                                        <th class="px-4 py-3 fw-bold">Estado</th>
+                                        <th class="px-4 py-3 fw-bold text-end">Acción</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <% if (schedules && schedules.length> 0) { %>
+                                        <% schedules.forEach(schedule=> { %>
+                                            <tr style="transition: all 0.2s ease;">
+                                                <td class="px-4 py-3">
+                                                    <div class="d-flex align-items-center gap-3">
+                                                        <div class="bg-primary-container bg-opacity-10 text-emerald p-2 rounded-3 d-flex align-items-center justify-content-center"
+                                                            style="width: 36px; height: 36px;">
+                                                            <i class="bi bi-calendar-event"></i>
+                                                        </div>
+                                                        <span class="fw-bold text-dark">
+                                                            <%= schedule.court.name %>
+                                                        </span>
+                                                    </div>
+                                                </td>
+                                                <td class="px-4 py-3 text-secondary fw-medium">
+                                                    <%= new Date(schedule.fecha).toLocaleDateString('es-ES', {
+                                                        day: '2-digit' , month: 'short' , year: 'numeric' }) %>
+                                                </td>
+                                                <td class="px-4 py-3">
+                                                    <span
+                                                        class="bg-surface-container px-3 py-1 rounded-pill small fw-bold text-secondary">
+                                                        <%= schedule.start_time.slice(0,5) %> - <%=
+                                                                schedule.end_time.slice(0,5) %>
+                                                    </span>
+                                                </td>
+                                                <td class="px-4 py-3">
+                                                    <% if (schedule.disponible) { %>
+                                                        <span
+                                                            class="text-success small fw-bold d-flex align-items-center gap-2">
+                                                            <span class="pulse-dot bg-success"></span> Disponible
+                                                        </span>
+                                                        <% } else { %>
+                                                            <span
+                                                                class="text-secondary small fw-bold d-flex align-items-center gap-2">
+                                                                <span class="bg-secondary rounded-circle"
+                                                                    style="width:8px; height:8px;"></span> Ocupado
+                                                            </span>
+                                                            <% } %>
+                                                </td>
+                                                <td class="px-4 py-3 text-end">
+                                                    <form action="/admin/schedules/delete/<%= schedule.id %>"
+                                                        method="POST" class="d-inline m-0">
+                                                        <button type="submit"
+                                                            class="btn btn-sm text-danger bg-danger-subtle hover-bg-danger border-0 rounded-3 d-flex align-items-center justify-content-center ms-auto"
+                                                            style="width: 32px; height: 32px;">
+                                                            <i class="bi bi-trash3-fill"></i>
+                                                        </button>
+                                                    </form>
+                                                </td>
+                                            </tr>
+                                            <% }) %>
+                                                <% } else { %>
+                                                    <tr>
+                                                        <td colspan="5" class="text-center py-5">
+                                                            <div
+                                                                class="d-flex flex-column align-items-center justify-content-center text-muted opacity-75">
+                                                                <i class="bi bi-inbox-fill display-4 mb-3"></i>
+                                                                <h5 class="fw-bold text-dark">Inventario Vacío</h5>
+                                                                <p class="small">No hay horarios generados. Usa el panel
+                                                                    superior para crear bloques de tiempo.</p>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                    <% } %>
+                                </tbody>
+                            </table>
+                        </div>
+                    </section>
+
+                </div>
+                <%- include('../../components/layout/footer.ejs') %>
+        </main>

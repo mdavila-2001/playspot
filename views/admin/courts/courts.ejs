@@ -21,13 +21,6 @@
 
         <div class="d-flex flex-column gap-3">
 
-            <% if (typeof error !== 'undefined' && error === 'tiene_reservas') { %>
-                <div class="alert alert-danger d-flex align-items-center mb-4 border-0 shadow-sm" role="alert" style="border-radius: 0.75rem; background-color: #fde8e8; color: #9b1c1c;">
-                    <i class="bi bi-shield-lock-fill me-3 fs-4"></i>
-                    <div><strong>Bloqueo de Seguridad:</strong> No puedes eliminar una cancha que tiene horarios con reservas confirmadas y pagadas.</div>
-                </div>
-            <% } %>
-
             <div class="d-none d-md-flex row px-4 py-2 text-muted text-uppercase fw-bold letter-spacing-1"
                 style="font-size: 0.7rem;">
                 <div class="col-5">Detalles de la Cancha</div>
@@ -74,7 +67,7 @@
                             <a href="/admin/courts/edit/<%= court.id %>" class="btn btn-light text-secondary rounded-3 d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
                                 <i class="bi bi-pencil-square"></i>
                             </a>
-                            <form action="/admin/courts/delete/<%= court.id %>" method="POST" class="m-0" onsubmit="return confirm('ATENCIÓN: ¿Estás totalmente seguro de eliminar esta cancha y todo su registro del sistema?');">
+                            <form action="/admin/courts/delete/<%= court.id %>" method="POST" class="m-0">
                                 <button type="submit" class="btn btn-danger bg-danger-subtle text-danger border-0 rounded-3 d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
                                     <i class="bi bi-trash3-fill"></i>
                                 </button>

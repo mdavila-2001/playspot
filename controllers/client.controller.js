@@ -25,23 +25,25 @@ exports.getCatalog = async (req, res) => {
         });
 
         if (selectedDate) {
+            const dateObj = new Date(selectedDate);
+            const dayOfWeek = dateObj.getDay();
+
             for (const court of courts) {
-                const applicableSlots = court.schedules.filter(s => {
-                    if (!s.fecha) return false;
-                    const dateStr = typeof s.fecha === 'string' ? s.fecha : s.fecha.toISOString();
-                    return dateStr.includes(selectedDate);
-                });
-                
+                const applicableSlots = court.schedules.filter(s =>
+                    s.day_of_week === null || s.day_of_week === dayOfWeek
+                );
                 const takenSlotIds = (await db.Booking.findAll({
                     where: {
+                        date: selectedDate,
                         status: { [Op.ne]: 'cancelled' },
                         schedule_id: { [Op.in]: applicableSlots.map(s => s.id) }
                     },
                     attributes: ['schedule_id']
                 })).map(b => b.schedule_id);
 
+                // Añadir bandera de disponibilidad a cada slot
                 court.availableSchedules = applicableSlots
-                    .map(s => ({ ...s.toJSON(), isAvailable: !takenSlotIds.includes(s.id) && s.disponible }))
+                    .map(s => ({ ...s.toJSON(), isAvailable: !takenSlotIds.includes(s.id) }))
                     .sort((a, b) => a.start_time.localeCompare(b.start_time));
             }
         }
@@ -55,7 +57,7 @@ exports.getCatalog = async (req, res) => {
             }
         });
 
-        res.render('client/catalog/catalog', { user: currentUser, courts, selectedDate: selectedDate || '' });
+        res.render('client/catalog', { user: currentUser, courts, selectedDate: selectedDate || '' });
     } catch (error) {
         console.error(error);
         res.status(500).send("Error interno mostrando catálogo");
@@ -65,35 +67,33 @@ exports.getCatalog = async (req, res) => {
 exports.createBooking = async (req, res) => {
     try {
         if (!req.session.userId) return res.redirect('/login');
-        let { schedule_ids } = req.body;
-        
-        if (!schedule_ids) return res.status(400).send("No seleccionaste ningún turno.");
-        
-        if (!Array.isArray(schedule_ids)) {
-            schedule_ids = [schedule_ids];
+        const { schedule_id, date } = req.body;
+
+        // Verificar que el slot existe
+        const schedule = await db.Schedule.findByPk(schedule_id);
+        if (!schedule) {
+            return res.status(400).send("Horario no encontrado.");
         }
 
-        for (const id of schedule_ids) {
-            const schedule = await db.Schedule.findByPk(id);
-            if (!schedule) continue;
-
-            const existingBooking = await db.Booking.findOne({
-                where: {
-                    schedule_id: id,
-                    date: schedule.fecha,
-                    status: { [Op.ne]: 'cancelled' }
-                }
-            });
-
-            if (!existingBooking) {
-                await db.Booking.create({
-                    user_id: req.session.userId,
-                    schedule_id: id,
-                    date: schedule.fecha,
-                    status: 'confirmed'
-                });
+        // Verificar que nadie más ya reservó ese slot en esa fecha
+        const existingBooking = await db.Booking.findOne({
+            where: {
+                schedule_id,
+                date,
+                status: { [Op.ne]: 'cancelled' }
             }
+        });
+
+        if (existingBooking) {
+            return res.status(400).send("Este horario ya fue reservado para esa fecha.");
         }
+
+        await db.Booking.create({
+            user_id: req.session.userId,
+            schedule_id,
+            date,
+            status: 'confirmed'
+        });
 
         res.redirect('/client/bookings?success=booking');
     } catch (error) {
@@ -122,7 +122,7 @@ exports.getMyBookings = async (req, res) => {
         const activeBookings = bookings.filter(b => b.status === 'confirmed');
         const pastBookings = bookings.filter(b => b.status === 'completed' || b.status === 'cancelled');
 
-        res.render('client/bookings/bookings', { user: currentUser, activeBookings, pastBookings });
+        res.render('client/bookings', { user: currentUser, activeBookings, pastBookings });
     } catch (error) {
         console.error(error);
         res.status(500).send("Error interno cargando historial");
@@ -137,6 +137,8 @@ exports.cancelBooking = async (req, res) => {
         if (booking && booking.user_id === req.session.userId && booking.status === 'confirmed') {
             booking.status = 'cancelled';
             await booking.save();
+            // No necesitamos actualizar isAvailable en Schedule (ya no existe)
+            // Ese slot vuelve a estar disponible automáticamente al cancelar
         }
         res.redirect('/client/bookings?success=cancel');
     } catch (error) {
@@ -148,7 +150,7 @@ exports.cancelBooking = async (req, res) => {
 exports.createReview = async (req, res) => {
     try {
         if (!req.session.userId) return res.redirect('/login');
-        const { court_id, booking_id, rating, comment } = req.body;
+        const { court_id, rating, comment } = req.body;
 
         await db.Review.create({
             user_id: req.session.userId,
@@ -156,10 +158,6 @@ exports.createReview = async (req, res) => {
             rating: parseInt(rating),
             comment
         });
-        
-        if (booking_id) {
-            await db.Booking.update({ is_reviewed: true }, { where: { id: booking_id } });
-        }
 
         res.redirect('/client/bookings?success=review');
     } catch (error) {

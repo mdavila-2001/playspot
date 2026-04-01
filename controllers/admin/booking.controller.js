@@ -38,7 +38,7 @@ bookingController.listBookings = async (req, res) => {
         };
 
         bookings.forEach(b => {
-            if (b.status === 'completed' && b.date === today) {
+            if (b.status === 'confirmed' && b.date === today) {
                 stats.earningsToday += parseFloat(b.schedule.court.price_per_hour || 0);
             }
             
@@ -87,22 +87,6 @@ bookingController.confirmBooking = async (req, res) => {
         res.redirect('/admin/bookings');
     } catch (error) {
         console.error("Error al confirmar reserva:", error);
-        res.redirect('/admin/bookings');
-    }
-};
-
-bookingController.completeBooking = async (req, res) => {
-    try {
-        const { id } = req.params;
-        const booking = await Booking.findByPk(id);
-        
-        if (booking && booking.status === 'confirmed') {
-            await booking.update({ status: 'completed' });
-        }
-        
-        res.redirect('/admin/bookings');
-    } catch (error) {
-        console.error("Error al marcar reserva como completada:", error);
         res.redirect('/admin/bookings');
     }
 };

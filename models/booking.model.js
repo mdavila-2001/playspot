@@ -13,11 +13,6 @@ module.exports = (sequelize) => {
                 type: DataTypes.ENUM('confirmed', 'cancelled', 'completed'),
                 allowNull: false,
                 defaultValue: 'confirmed'
-            },
-            is_reviewed: {
-                type: DataTypes.BOOLEAN,
-                allowNull: false,
-                defaultValue: false
             }
         },
         {

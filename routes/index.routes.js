@@ -8,7 +8,6 @@ const clientController = require('../controllers/client.controller');
 const scheduleController = require('../controllers/admin/schedule.controller');
 const bookingController = require('../controllers/admin/booking.controller');
 const reviewController = require('../controllers/admin/review.controller');
-const { requireAuth, requireAdmin, requireClient } = require('../middlewares/auth.middleware');
 
 router.get('/', (req, res) => {
     res.redirect('/dashboard');
@@ -25,9 +24,6 @@ router.get('/dashboard', (req, res) => {
         return clientController.getCatalog(req, res);
     }
 });
-
-router.use('/admin', requireAuth, requireAdmin);
-router.use('/client', requireAuth, requireClient);
 
 router.get('/admin/courts', courtController.index);
 router.get('/admin/courts/add', courtController.showCreate);
@@ -49,7 +45,6 @@ router.post('/admin/schedules/generate', scheduleController.generateSchedules);
 router.post('/admin/schedules/delete/:id', scheduleController.deleteSchedule);
 router.get('/admin/bookings', bookingController.listBookings);
 router.post('/admin/bookings/confirm/:id', bookingController.confirmBooking);
-router.post('/admin/bookings/complete/:id', bookingController.completeBooking);
 router.post('/admin/bookings/cancel/:id', bookingController.cancelBooking);
 router.post('/admin/bookings/update-status/:id', bookingController.updateStatus);
 

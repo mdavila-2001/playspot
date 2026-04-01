@@ -54,7 +54,8 @@ exports.index = async (req, res) => {
         res.render('admin/courts/courts', {
             courts: courts,
             user: currentUser,
-            activePage: 'courts'
+            activePage: 'courts',
+            error: req.query.error || null
         });
     } catch (error) {
         console.error('Error al obtener las canchas:', error);
@@ -197,7 +198,16 @@ exports.deleteCourt = async (req, res) => {
 
         const court = await db.Court.findByPk(req.params.id);
         if (court) {
-             await court.destroy();
+            const reservasActivas = await db.Booking.count({
+                include: [{ model: db.Schedule, as: 'schedule', where: { court_id: req.params.id } }],
+                where: { status: 'confirmed' }
+            });
+
+            if (reservasActivas > 0) {
+                return res.redirect('/admin/courts?error=tiene_reservas');
+            }
+
+            await court.destroy();
         }
         res.redirect('/admin/courts');
     } catch (error) {

@@ -77,10 +77,23 @@ const seedCourts = async () => {
     }
 };
 
-// NOTA: { force: true } recrea las tablas con el nuevo esquema.
-// Una vez que el servidor arranque bien, cámbialo a sync({ alter: true }) o sync()
-db.sequelize.sync({ force: true }).then(async () => {
+
+db.sequelize.query("ALTER TABLE bookings ADD COLUMN is_reviewed INTEGER DEFAULT 0;").catch(() => {});
+db.sequelize.query("DROP TABLE IF EXISTS users_backup").then(() => {
+    return db.sequelize.query("DROP TABLE IF EXISTS bookings_backup");
+}).then(() => {
+    return db.sequelize.sync();
+}).then(async () => {
     console.log('Base de datos conectada');
+    
+    const fs = require('fs');
+    const path = require('path');
+    const resetMarker = path.join(__dirname, '.bookings_reset');
+    if (!fs.existsSync(resetMarker)) {
+        console.log('Limpiando candados corruptos de SQLite en la tabla de reservas...');
+        await db.Booking.sync({ force: true });
+        fs.writeFileSync(resetMarker, 'done');
+    }
     await seedAdmin();
     await seedCourts();
     app.listen(port, () => console.log(`Servidor en http://localhost:${port}`));

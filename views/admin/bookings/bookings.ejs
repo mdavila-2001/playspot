@@ -102,7 +102,12 @@
                         <div class="col-6 col-md-1 text-end mt-3 mt-md-0">
                             <div class="d-flex justify-content-end gap-2">
                                 <% if(booking.status === 'confirmed') { %>
-                                    <form action="/admin/bookings/cancel/<%= booking.id %>" method="POST" class="m-0" onsubmit="return confirm('¿Estás seguro de que deseas cancelar esta reserva? Esta acción no se puede deshacer.')">
+                                    <form action="/admin/bookings/complete/<%= booking.id %>" method="POST" class="m-0" onsubmit="return confirm('¿El cliente ya pagó? ¿Deseas marcar esta reserva como COMPLETADA en caja?');">
+                                        <button class="btn btn-sm btn-light text-success border-0 rounded-3 shadow-sm" title="Marcar como Completada y Pagada">
+                                            <i class="bi bi-check-circle-fill"></i>
+                                        </button>
+                                    </form>
+                                    <form action="/admin/bookings/cancel/<%= booking.id %>" method="POST" class="m-0" onsubmit="return confirm('¿Estás seguro de que deseas cancelar esta reserva por inasistencia? Esta acción no se puede deshacer.')">
                                         <button class="btn btn-sm btn-light text-danger border-0 rounded-3 shadow-sm" title="Cancelar Reserva">
                                             <i class="bi bi-x-circle-fill"></i>
                                         </button>

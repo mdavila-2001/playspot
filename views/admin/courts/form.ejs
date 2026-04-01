@@ -1,0 +1,126 @@
+<%- include('../../components/layout/header.ejs', { title: (court.id ? 'Editar Cancha' : 'Nueva Cancha') + ' | PlaySpot', hideNav: true }) %>
+<%- include('../../components/layout/admin-sidebar.ejs') %>
+
+<main class="admin-main bg-light">
+    <%- include('../../components/layout/admin-topbar.ejs') %>
+
+    <div class="admin-content-wrapper p-4 p-md-5">
+        
+        <div class="mx-auto" style="max-width: 800px;">
+            
+            <div class="d-flex flex-column flex-sm-row align-items-sm-center justify-content-between mb-4 gap-3">
+                <div>
+                    <h2 class="fs-3 fw-bold font-headline text-dark mb-1">
+                        <%= court.id ? 'Editar Cancha' : 'Agregar Nueva Cancha' %>
+                    </h2>
+                    <p class="text-secondary small mb-0">
+                        <%= court.id ? 'Modifica los detalles de este espacio deportivo.' : 'Completa los datos para registrar un espacio en el sistema.' %>
+                    </p>
+                </div>
+                <a href="/admin/courts" class="btn btn-outline-secondary btn-sm d-flex align-items-center gap-2 px-3 fw-medium">
+                    <span class="material-symbols-outlined fs-6">arrow_back</span> Regresar
+                </a>
+            </div>
+
+            <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+                <form action="<%= court.id ? '/admin/courts/edit/' + court.id : '/admin/courts/add' %>" method="POST" enctype="multipart/form-data" class="card-body p-4 p-md-5">
+                    
+                    <%- include('../../components/layout/alert-error', { error: locals.error }) %>
+
+                    <%- include('../../components/input-field.ejs', {
+                        label: 'Nombre de la Cancha',
+                        name: 'name',
+                        value: court.name,
+                        placeholder: 'Ej: Pista Central de Tenis',
+                        icon: 'stadium'
+                    }) %>
+
+                    <div class="row g-4 mb-4">
+                        <div class="col-md-6">
+                            <label for="court_type_id" class="form-label fw-semibold text-secondary small text-uppercase" style="letter-spacing: 0.5px;">Categoría (Deporte)</label>
+                            <select id="court_type_id" name="court_type_id" class="form-select form-select-lg bg-light border-0 pointer">
+                                <option value="" disabled <%= !court.court_type_id ? 'selected' : '' %>>Seleccionar...</option>
+                                <% courtTypes.forEach(type => { %>
+                                    <option value="<%= type.id %>" <%= court.court_type_id === type.id ? 'selected' : '' %>><%= type.name %></option>
+                                <% }) %>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <%- include('../../components/input-field.ejs', {
+                                label: 'Tarifa por Hora (Base)',
+                                name: 'price_per_hour',
+                                type: 'number',
+                                step: '0.01',
+                                min: '0',
+                                value: court.price_per_hour,
+                                placeholder: '0.00',
+                                icon: 'payments'
+                            }) %>
+                        </div>
+                    </div>
+
+                    <!-- Campo: Estado (Activa/Inactiva) -->
+                    <div class="mb-4 p-3 bg-light rounded-3 d-flex align-items-center justify-content-between border border-light">
+                        <div class="d-flex align-items-center gap-3">
+                            <div class="rounded-circle bg-white shadow-sm d-flex align-items-center justify-content-center text-primary" style="width: 40px; height: 40px;">
+                                <i class="material-symbols-outlined fs-5">gavel</i>
+                            </div>
+                            <div>
+                                <span class="fw-bold d-block text-dark">Disponibilidad en el Sistema</span>
+                                <span class="small text-secondary">Si está apagado, los clientes no podrán verla ni reservarla.</span>
+                            </div>
+                        </div>
+                        <div class="form-check m-0 px-2 d-flex align-items-center justify-content-center">
+                            <input class="form-check-input pointer fs-3 shadow-none border-secondary" type="checkbox" name="is_active" id="is_active" <%= court.is_active !== false ? 'checked' : '' %>>
+                        </div>
+                    </div>
+
+                    <!-- Campo: Imagen -->
+                    <div class="mb-5">
+                        <label for="image_url" class="form-label fw-semibold text-secondary small text-uppercase" style="letter-spacing: 0.5px;">Fotografía Principal</label>
+                        
+                        <% if (court.image_url) { %>
+                            <div class="d-flex align-items-center gap-3 mb-3 p-3 border rounded-3 bg-white shadow-sm">
+                                <img src="<%= court.image_url %>" alt="Vista previa" class="rounded object-fit-cover border" style="width: 70px; height: 70px;">
+                                <div>
+                                    <span class="d-block fw-bold text-dark fs-6">Imagen Actual Guardada</span>
+                                    <span class="small text-secondary">Si subes un nuevo archivo a continuación se reemplazará la imagen existente.</span>
+                                </div>
+                            </div>
+                        <% } %>
+
+                        <div class="border border-2 border-dashed rounded-3 p-4 text-center bg-light pointer drag-area transition-all" onclick="document.getElementById('image_url').click()">
+                            <input type="file" id="image_url" name="image_url" accept="image/*" class="d-none">
+                            <div class="text-primary mb-2">
+                                <i class="material-symbols-outlined fs-1">add_photo_alternate</i>
+                            </div>
+                            <span class="fw-medium text-dark d-block">Haz clic o arrastra para subir una foto</span>
+                            <span class="small text-secondary mt-1 d-block">Soporta JPG y PNG. (Máx 5MB)</span>
+                        </div>
+                    </div>
+
+                    <!-- Botones de Acción -->
+                    <div class="d-flex align-items-center justify-content-end gap-3 pt-3 border-top">
+                        <a href="/admin/courts" class="btn btn-light px-4 py-2 fw-medium text-secondary rounded-3">Cancelar</a>
+                        <button type="submit" class="btn btn-primary px-4 py-2 fw-bold d-flex align-items-center gap-2 rounded-3 shadow-sm">
+                            <i class="material-symbols-outlined fs-5">save</i>
+                            <%= court.id ? 'Guardar Cambios' : 'Crear Cancha' %>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <%- include('../../components/layout/footer.ejs') %>
+</main>
+<style>
+.pointer { cursor: pointer; }
+.form-control:focus, .form-select:focus {
+    background-color: #ffffff !important;
+    border-color: var(--ps-emerald) !important;
+    box-shadow: 0 0 0 0.25rem rgba(0, 109, 55, 0.1) !important;
+}
+.border-dashed { border-style: dashed !important; border-color: #dee2e6 !important; }
+.drag-area:hover { border-color: var(--ps-emerald) !important; background-color: rgba(0, 109, 55, 0.02) !important; }
+</style>

@@ -1,7 +1,9 @@
-    <% if (locals.user) { %>
-        <footer class="py-5 mt-auto" style="background-color: var(--ps-surface-container)">
-            <div class="container text-center">
-                <p class="text-muted mb-0">&copy; 2026 PlaySpot. Ingeniería Web II - Práctico 1</p>
+    <% if (locals.userName || locals.user) { %>
+        <footer class="py-4 border-top admin-footer" style="background-color: var(--ps-surface-container)">
+            <div class="container-fluid px-5 text-center">
+                <p class="text-muted mb-0" style="font-size: 0.75rem;">
+                    &copy; 2026 <strong>PlaySpot</strong> &middot; Ingeniería Web II &middot; Práctico 1
+                </p>
             </div>
         </footer>
     <% } %>

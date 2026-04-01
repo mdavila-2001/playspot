@@ -1,0 +1,35 @@
+<aside class="admin-sidebar d-flex flex-column p-4 border-end border-light">
+
+    <div class="d-flex flex-column gap-1 mb-5 ps-2">
+        <span class="fs-4 fw-black text-uppercase font-headline" style="color: var(--ps-primary); letter-spacing: -0.05em;">PlaySpot Admin</span>
+        <span class="font-headline text-secondary fw-semibold" style="font-size: 0.7rem; letter-spacing: -0.01em;">Centro de Gestión</span>
+    </div>
+
+    <nav class="nav flex-column gap-2 flex-grow-1">
+        <a class="nav-link admin-nav-link <%= locals.activePage === 'dashboard' ? 'active' : '' %> d-flex align-items-center gap-3 px-3 py-3" href="/dashboard">
+            <span class="material-symbols-outlined">dashboard</span> Panel
+        </a>
+        <a class="nav-link admin-nav-link <%= locals.activePage === 'courts' ? 'active' : '' %> d-flex align-items-center gap-3 px-3 py-3" href="/admin/courts">
+            <span class="material-symbols-outlined">stadium</span> Canchas
+        </a>
+        <a class="nav-link admin-nav-link <%= locals.activePage === 'court-types' ? 'active' : '' %> d-flex align-items-center gap-3 px-3 py-3" href="/admin/court-types">
+            <span class="material-symbols-outlined">category</span> Tipos de Cancha
+        </a>
+        <a class="nav-link admin-nav-link <%= locals.activePage === 'schedules' ? 'active' : '' %> d-flex align-items-center gap-3 px-3 py-3" href="/admin/schedules">
+            <span class="material-symbols-outlined">calendar_today</span> Horarios
+        </a>
+        <a class="nav-link admin-nav-link <%= locals.activePage === 'bookings' ? 'active' : '' %> d-flex align-items-center gap-3 px-3 py-3" href="/admin/bookings">
+            <span class="material-symbols-outlined">confirmation_number</span> Reservas
+        </a>
+        <a class="nav-link admin-nav-link <%= locals.activePage === 'reviews' ? 'active' : '' %> d-flex align-items-center gap-3 px-3 py-3" href="/admin/reviews">
+            <span class="material-symbols-outlined">reviews</span> Reseñas
+        </a>
+    </nav>
+
+    <div class="pt-4 mt-4 border-top border-light d-flex flex-column gap-2">
+        <a class="nav-link admin-nav-link d-flex align-items-center gap-3 px-3 py-2 text-danger" href="/logout">
+            <span class="material-symbols-outlined">logout</span> Cerrar Sesión
+        </a>
+    </div>
+
+</aside>

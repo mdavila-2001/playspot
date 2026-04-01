@@ -26,7 +26,8 @@ scheduleController.getSchedules = async (req, res) => {
             user: currentUser,
             activePage: 'schedules',
             courts,
-            schedules
+            schedules,
+            error: req.query.error || null
         });
     } catch (error) {
         console.error("Error cargando el módulo de horarios:", error);
@@ -63,6 +64,14 @@ scheduleController.generateSchedules = async (req, res) => {
 
 scheduleController.deleteSchedule = async (req, res) => {
     try {
+        const reservasActivas = await db.Booking.count({
+            where: { schedule_id: req.params.id, status: 'confirmed' }
+        });
+
+        if (reservasActivas > 0) {
+            return res.redirect('/admin/schedules?error=tiene_reservas');
+        }
+
         await db.Schedule.destroy({ 
             where: { id: req.params.id } 
         });

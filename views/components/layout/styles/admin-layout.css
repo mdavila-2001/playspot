@@ -1,0 +1,163 @@
+/* Layout Central Administrador heredado del Cliente */
+body { 
+    margin: 0; 
+    padding: 0; 
+    display: flex;
+    min-height: 100vh;
+}
+
+.layout {
+    display: flex;
+    width: 100%;
+}
+
+.sidebar {
+    width: 260px;
+    background: #f1f5f9;
+    padding: 1.5rem 1.25rem;
+    display: flex;
+    flex-direction: column;
+    border-right: 1px solid #e2e8f0;
+    flex-shrink: 0;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    box-sizing: border-box;
+}
+
+.sidebar-header {
+    margin-bottom: 3rem;
+    padding-left: 0.5rem;
+}
+
+.sidebar-header h2 {
+    font-size: 1.25rem;
+    font-weight: 800;
+    color: #0f172a;
+    margin: 0 0 0.25rem 0;
+    letter-spacing: -0.05em;
+    text-transform: uppercase;
+}
+
+.sidebar-header p {
+    font-size: 0.75rem;
+    color: #64748b;
+    margin: 0;
+    font-weight: 600;
+}
+
+.sidebar-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    flex: 1;
+}
+
+.nav-item {
+    display: flex;
+    align-items: center;
+    padding: 0.875rem 1rem;
+    text-decoration: none;
+    color: #475569;
+    font-weight: 600;
+    font-size: 0.95rem;
+    border-radius: 0.75rem;
+    transition: all 0.2s ease;
+}
+
+.nav-item:hover {
+    background: #e2e8f0;
+    color: #0f172a;
+}
+
+.nav-item.active {
+    background: white;
+    color: #059669;
+    box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+}
+
+.nav-item.active svg {
+    stroke: #059669;
+}
+
+.nav-item svg {
+    margin-right: 0.75rem;
+    width: 20px;
+    height: 20px;
+    stroke: currentColor;
+}
+
+.sidebar-footer {
+    margin-top: auto;
+}
+
+.text-danger {
+    color: #ef4444 !important;
+}
+
+.text-danger:hover {
+    background: #fee2e2 !important;
+    color: #b91c1c !important;
+}
+
+.main-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+}
+
+.top-header {
+    background: white;
+    padding: 1rem 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.top-header h1 {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: #0f172a;
+    margin: 0;
+}
+
+.top-header p {
+    margin: 0.25rem 0 0 0;
+    color: #64748b;
+    font-size: 0.9rem;
+}
+
+.header-user {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    font-weight: 600;
+    color: #334155;
+    font-size: 0.9rem;
+}
+
+.btn-header-logout {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: #ef4444;
+    background: #fee2e2;
+    width: 36px;
+    height: 36px;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.btn-header-logout:hover {
+    background: #fca5a5;
+    color: #b91c1c;
+}
+
+.btn-header-logout svg {
+    width: 18px;
+    height: 18px;
+    stroke: currentColor;
+}

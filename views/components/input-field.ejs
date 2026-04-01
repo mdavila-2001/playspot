@@ -3,9 +3,13 @@
   const name = locals.name || '';
   const type = locals.type || 'text';
   const placeholder = locals.placeholder || '';
+  const value = locals.value !== undefined ? locals.value : '';
   const required = locals.required ? 'required' : '';
   const icon = locals.icon || '';
   const showToggle = locals.showToggle || false;
+  const step = locals.step ? `step="${locals.step}"` : '';
+  const min = locals.min !== undefined ? `min="${locals.min}"` : '';
+  const max = locals.max !== undefined ? `max="${locals.max}"` : '';
 %>
 
 <style>
@@ -89,6 +93,10 @@
       id="<%= name %>" 
       class="form-control form-control-kinetic <%= showToggle ? 'has-toggle' : '' %>" 
       placeholder="<%= placeholder %>"
+      value="<%= value %>"
+      <%- step %>
+      <%- min %>
+      <%- max %>
       <%= required %>
     >
     <% if (showToggle) { %>

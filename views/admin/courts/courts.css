@@ -1,0 +1,41 @@
+/* Animación del estado de la cancha */
+.pulse-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    animation: pulse-animation 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes pulse-animation {
+    0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(46, 204, 113, 0.4); }
+    50% { opacity: 0.5; box-shadow: 0 0 0 6px rgba(46, 204, 113, 0); }
+}
+
+.court-row-kinetic {
+    background-color: var(--ps-surface-lowest, #ffffff);
+    border-radius: 1rem;
+    transition: all 0.3s ease;
+    border: 1px solid transparent;
+}
+
+.court-row-kinetic:hover {
+    transform: scale(1.01);
+    box-shadow: 0 20px 40px -10px rgba(0, 109, 55, 0.08);
+    border: 1px solid rgba(46, 204, 113, 0.1);
+}
+
+.court-img-thumbnail {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 0.75rem;
+    transition: transform 0.5s ease;
+}
+
+.court-row-kinetic:hover .court-img-thumbnail {
+    transform: scale(1.05);
+}
+
+.img-grayscale {
+    filter: grayscale(100%);
+}

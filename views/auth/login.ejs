@@ -21,8 +21,7 @@
         </div>
 
         <div class="login-card">
-            <%- include('../components/alert-error', { error: locals.error }) %>
-            <!-- Alerta de validación cliente (JS) -->
+            <%- include('../components/layout/alert-error', { error: locals.error }) %>
             <div id="clientAlert" class="alert alert-kinetic-client d-none d-flex align-items-center mb-0" role="alert">
                 <span class="material-symbols-outlined fs-5 me-3">error</span>
                 <div class="small fw-bold mb-0" id="clientAlertMsg"></div>

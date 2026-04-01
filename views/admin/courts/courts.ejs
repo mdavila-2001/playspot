@@ -1,0 +1,100 @@
+<%- include('../../components/layout/header.ejs', { title: 'Gestión de Canchas | PlaySpot', hideNav: true }) %>
+<%- include('../../components/layout/admin-sidebar.ejs') %>
+
+<main class="admin-main">
+    <%- include('../../components/layout/admin-topbar.ejs') %>
+
+    <div class="admin-content-wrapper p-4 p-lg-5">
+
+        <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-end gap-4 mb-5">
+            <div>
+                <h1 class="display-5 fw-black font-headline tracking-tight mb-0 text-dark">Gestión de
+                    Canchas</h1>
+            </div>
+            <div class="d-flex align-items-center gap-3">
+                <a href="/admin/courts/add"
+                    class="btn btn-primary d-flex align-items-center gap-2 shadow-sm px-4 py-3 rounded-3 text-white text-decoration-none fw-bold">
+                    <i class="bi bi-plus-circle-fill"></i> Agregar Cancha
+                </a>
+            </div>
+        </div>
+
+        <div class="d-flex flex-column gap-3">
+
+            <% if (typeof error !== 'undefined' && error === 'tiene_reservas') { %>
+                <div class="alert alert-danger d-flex align-items-center mb-4 border-0 shadow-sm" role="alert" style="border-radius: 0.75rem; background-color: #fde8e8; color: #9b1c1c;">
+                    <i class="bi bi-shield-lock-fill me-3 fs-4"></i>
+                    <div><strong>Bloqueo de Seguridad:</strong> No puedes eliminar una cancha que tiene horarios con reservas confirmadas y pagadas.</div>
+                </div>
+            <% } %>
+
+            <div class="d-none d-md-flex row px-4 py-2 text-muted text-uppercase fw-bold letter-spacing-1"
+                style="font-size: 0.7rem;">
+                <div class="col-5">Detalles de la Cancha</div>
+                <div class="col-2 text-center">Tarifa x Hora</div>
+                <div class="col-3 text-center">Disponibilidad</div>
+                <div class="col-2 text-end">Acciones</div>
+            </div>
+
+            <% if (courts && courts.length > 0) { %>
+                <% courts.forEach(court => { %>
+                    <div class="row mx-0 align-items-center px-3 py-3 px-md-4 py-md-4 bg-white rounded-4 shadow-sm mb-3 border <%= !court.is_active ? 'opacity-75' : '' %>">
+                        
+                        <div class="col-12 col-md-5 d-flex align-items-center gap-4 mb-3 mb-md-0">
+                            <div class="overflow-hidden rounded-3 flex-shrink-0" style="width: 80px; height: 80px;">
+                                <img src="<%= court.image_url || court.img || 'https://images.unsplash.com/photo-1579952363873-27f3bade9f55?q=80&w=200' %>" 
+                                     alt="<%= court.name %>" 
+                                     class="court-img-thumbnail <%= !court.is_active ? 'img-grayscale' : '' %>">
+                            </div>
+                            <div>
+                                <h3 class="fs-5 fw-bold font-headline mb-0 text-dark"><%= court.name %></h3>
+                                <p class="text-secondary small fw-medium mb-0"><%= court.type ? (typeof court.type === 'object' ? court.type.name : court.type) : 'Sin tipo' %></p>
+                            </div>
+                        </div>
+
+                        <div class="col-6 col-md-2 text-md-center">
+                            <span class="fs-4 fw-black text-dark">$<%= Number(court.price_per_hour || 0).toFixed(2) %> <span class="fs-6 fw-medium text-muted">/ hr</span></span>
+                        </div>
+
+                        <div class="col-6 col-md-3 d-flex justify-content-md-center">
+                            <% if (court.is_active) { %>
+                                <div class="badge bg-success-subtle text-success px-3 py-2 rounded-pill d-inline-flex align-items-center gap-2">
+                                    <span class="bg-success rounded-circle" style="width: 8px; height: 8px;"></span>
+                                    <span class="fw-bold text-uppercase letter-spacing-1" style="font-size: 0.65rem;">Activa</span>
+                                </div>
+                            <% } else { %>
+                                <div class="badge bg-secondary-subtle text-secondary px-3 py-2 rounded-pill d-inline-flex align-items-center gap-2">
+                                    <span class="bg-secondary rounded-circle" style="width: 8px; height: 8px;"></span>
+                                    <span class="fw-bold text-uppercase letter-spacing-1" style="font-size: 0.65rem;">Inactiva</span>
+                                </div>
+                            <% } %>
+                        </div>
+
+                        <div class="col-12 col-md-2 d-flex justify-content-end gap-2 mt-3 mt-md-0">
+                            <a href="/admin/courts/edit/<%= court.id %>" class="btn btn-light text-secondary rounded-3 d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
+                                <i class="bi bi-pencil-square"></i>
+                            </a>
+                            <form action="/admin/courts/delete/<%= court.id %>" method="POST" class="m-0" onsubmit="return confirm('ATENCIÓN: ¿Estás totalmente seguro de eliminar esta cancha y todo su registro del sistema?');">
+                                <button type="submit" class="btn btn-danger bg-danger-subtle text-danger border-0 rounded-3 d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
+                                    <i class="bi bi-trash3-fill"></i>
+                                </button>
+                            </form>
+                        </div>
+
+                    </div>
+                <% }) %>
+            <% } else { %>
+                <div class="text-center p-5 bg-surface-container rounded-4 mt-4" style="background-color: var(--ps-surface-container-low, #f3f4f5);">
+                    <i class="bi bi-inbox fs-1 text-muted mb-3 d-block"></i>
+                    <h4 class="fw-bold text-dark">No hay canchas registradas</h4>
+                    <p class="text-secondary small">Haz clic en "Agregar Cancha" para empezar a armar tu complejo deportivo.</p>
+                </div>
+            <% } %>
+        </div>
+
+
+
+    </div>
+
+    <%- include('../../components/layout/footer.ejs') %>
+</main>

@@ -1,0 +1,46 @@
+<%- include('../../components/layout/header.ejs', { title: (courtType.id ? 'Editar' : 'Nuevo') + ' Tipo | PlaySpot', hideNav: true }) %>
+<%- include('../../components/layout/admin-sidebar.ejs') %>
+
+<main class="admin-main">
+    <%- include('../../components/layout/admin-topbar.ejs') %>
+
+    <div class="admin-content-wrapper p-4 p-lg-5">
+        
+        <div class="mb-5">
+            <a href="/admin/court-types" class="text-decoration-none text-muted mb-3 d-inline-block small fw-bold">← VOLVER A TIPOS</a>
+            <h1 class="display-6 fw-black font-headline tracking-tight mb-0 text-dark">
+                <%= courtType.id ? 'Editar Tipo de Cancha' : 'Definir Nuevo Tipo' %>
+            </h1>
+        </div>
+
+        <div class="card border-0 shadow-sm rounded-4" style="max-width: 600px;">
+            <div class="card-body p-4 p-md-5">
+                
+                <%- include('../../components/layout/alert-error', { error: locals.error }) %>
+
+                <form action="<%= courtType.id ? '/admin/court-types/edit/' + courtType.id : '/admin/court-types/add' %>" method="POST">
+                    
+                    <div class="mb-4">
+                        <label for="name" class="form-label text-uppercase fw-bold text-secondary" style="font-size: 0.75rem; letter-spacing: 0.05em;">Nombre del Tipo</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-light border-0"><i class="bi bi-tag-fill text-muted"></i></span>
+                            <input type="text" id="name" name="name" class="form-control bg-light border-0 py-3 px-3" 
+                                placeholder="Ej: Vóley - Arena" 
+                                value="<%= courtType.name || '' %>" required>
+                        </div>
+                    </div>
+
+                    <div class="d-flex justify-content-end gap-3 mt-5">
+                        <a href="/admin/court-types" class="btn btn-light px-4 py-2 fw-medium rounded-3">Cancelar</a>
+                        <button type="submit" class="btn btn-primary px-5 py-2 fw-bold text-white rounded-3 shadow-sm">
+                            <%= courtType.id ? 'Guardar Cambios' : 'Crear Tipo' %>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+    </div>
+
+    <%- include('../../components/layout/footer.ejs') %>
+</main>

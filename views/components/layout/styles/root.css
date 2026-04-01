@@ -16,12 +16,17 @@ body {
     overflow-x: hidden;
 }
 
-.text-primary {
+.text-primary, .text-emerald {
     color: var(--ps-emerald) !important;
 }
 
 .bg-primary {
     background-color: var(--ps-emerald) !important;
+}
+
+.bg-emerald-subtle {
+    background-color: #d1f7e0 !important;
+    color: var(--ps-emerald) !important;
 }
 
 .btn-primary {

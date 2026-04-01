@@ -1,0 +1,151 @@
+<%- include('../../components/layout/header.ejs', { title: 'Dashboard | Admin', hideNav: true }) %>
+<%- include('../../components/layout/admin-sidebar.ejs') %>
+
+<main class="admin-main">
+    <%- include('../../components/layout/admin-topbar.ejs') %>
+    
+    <div class="admin-content-wrapper p-4 p-lg-5">
+        
+        <header class="mb-5">
+            <h1 class="display-5 fw-black font-headline tracking-tight text-dark mb-1">Resumen General</h1>
+            <p class="text-secondary fw-medium">Bienvenido de nuevo, Administrador. Esto es lo que está pasando hoy.</p>
+        </header>
+
+        <div class="row g-4 mb-5">
+            <div class="col-12 col-xl-6">
+                <div class="bg-emerald-subtle p-4 p-lg-5 rounded-4 d-flex flex-column justify-content-between h-100 position-relative overflow-hidden border border-success border-opacity-10 shadow-sm transition-all hover-shadow">
+                    <div class="position-relative z-1">
+                        <p class="text-emerald small fw-black tracking-widest text-uppercase font-headline mb-3">Ingresos Totales (Confirmadas)</p>
+                        <h3 class="display-4 fw-black font-headline tracking-tighter text-dark mb-0">
+                            $<%= stats.totalRevenue.toLocaleString('en-US', { minimumFractionDigits: 2 }) %>
+                        </h3>
+                    </div>
+                    <div class="d-flex align-items-end justify-content-between position-relative z-1 mt-4">
+                        <div class="d-flex align-items-center gap-2 text-emerald fw-bold">
+                            <i class="bi bi-graph-up-arrow"></i>
+                            <span class="small">Rendimiento Histórico</span>
+                        </div>
+                    </div>
+                    <i class="bi bi-wallet2 position-absolute opacity-10" style="font-size: 10rem; right: -2rem; bottom: -3rem; transform: rotate(-15deg); color: var(--ps-emerald);"></i>
+                </div>
+            </div>
+
+            <div class="col-12 col-md-6 col-xl-3">
+                <div class="bg-white p-4 p-lg-5 rounded-4 shadow-sm border border-light d-flex flex-column justify-content-between h-100 transition-all hover-shadow">
+                    <div>
+                        <div class="rounded-3 bg-light text-secondary d-inline-flex p-3 mb-4">
+                            <span class="material-symbols-outlined fs-3">stadium</span>
+                        </div>
+                        <p class="text-muted small fw-black tracking-widest text-uppercase font-headline mb-2">Canchas Activas</p>
+                        <h3 class="display-5 fw-black font-headline tracking-tighter text-dark mb-0"><%= stats.activeCourtsCount %></h3>
+                    </div>
+                    <p class="small text-muted fw-medium mt-4 mb-0">Disponibles para reserva hoy.</p>
+                </div>
+            </div>
+
+            <div class="col-12 col-md-6 col-xl-3">
+                <div class="bg-white p-4 p-lg-5 rounded-4 shadow-sm border border-light d-flex flex-column justify-content-between h-100 transition-all hover-shadow">
+                    <div>
+                        <div class="rounded-3 bg-light text-primary d-inline-flex p-3 mb-4">
+                            <span class="material-symbols-outlined fs-3">group</span>
+                        </div>
+                        <p class="text-muted small fw-black tracking-widest text-uppercase font-headline mb-2">Nuevos Clientes</p>
+                        <h3 class="display-5 fw-black font-headline tracking-tighter text-dark mb-0"><%= stats.clientsCount %></h3>
+                    </div>
+                    <p class="small text-muted fw-medium mt-4 mb-0">Clientes totales en plataforma.</p>
+                </div>
+            </div>
+        </div>
+
+        <section>
+            <div class="d-flex align-items-center justify-content-between mb-4">
+                <h3 class="fs-3 fw-black tracking-tight font-headline mb-0 text-dark">Últimas Reservas</h3>
+                <a href="/admin/bookings" class="text-emerald fw-bold small text-decoration-none d-flex align-items-center gap-2 transition-transform hover-translate-x">
+                    Ver Historial Completo <i class="bi bi-arrow-right"></i>
+                </a>
+            </div>
+
+            <div class="bg-white rounded-4 shadow-sm overflow-hidden border border-light">
+                <table class="table table-borderless table-hover mb-0 align-middle">
+                    <thead class="bg-surface-container text-secondary font-label small text-uppercase letter-spacing-1">
+                        <tr>
+                            <th class="px-4 py-3" style="width: 30%;">Cliente / Cancha</th>
+                            <th class="px-4 py-3" style="width: 20%;">Fecha & Hora</th>
+                            <th class="px-4 py-3" style="width: 15%;">Precio</th>
+                            <th class="px-4 py-3" style="width: 25%;">Estado</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% if (latestBookings && latestBookings.length > 0) { %>
+                            <% latestBookings.forEach(booking => { %>
+                                <tr class="border-bottom border-light">
+                                    <td class="px-4 py-4">
+                                        <div class="d-flex align-items-center gap-3">
+                                            <div class="rounded-3 bg-light d-flex align-items-center justify-content-center text-secondary" style="width: 45px; height: 45px;">
+                                                <i class="bi bi-person-fill fs-5"></i>
+                                            </div>
+                                            <div>
+                                                <p class="mb-0 fw-bold text-dark font-lexend"><%= booking.user.name %></p>
+                                                <p class="mb-0 text-muted small"><%= booking.schedule.court.name %></p>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="px-4 py-4">
+                                        <p class="mb-0 fw-bold text-dark"><%= new Date(booking.schedule.fecha).toLocaleDateString('es-MX') %></p>
+                                        <p class="mb-0 text-muted small"><%= booking.schedule.start_time.slice(0, 5) %> - <%= booking.schedule.end_time.slice(0, 5) %></p>
+                                    </td>
+                                    <td class="px-4 py-4">
+                                        <p class="mb-0 fw-black font-headline text-dark">$<%= parseFloat(booking.schedule.court.price_per_hour).toLocaleString('en-US', { minimumFractionDigits: 2 }) %></p>
+                                    </td>
+                                    <td class="px-4 py-4">
+                                        <% 
+                                            let statusClass = 'bg-secondary-subtle text-secondary';
+                                            let statusText = 'Otro';
+                                            if(booking.status === 'confirmed') {
+                                                statusClass = 'bg-success-subtle text-success';
+                                                statusText = 'Confirmada';
+                                            } else if(booking.status === 'cancelled') {
+                                                statusClass = 'bg-danger-subtle text-danger';
+                                                statusText = 'Cancelada';
+                                            } else if(booking.status === 'completed') {
+                                                statusClass = 'bg-info-subtle text-info';
+                                                statusText = 'Completada';
+                                            }
+                                        %>
+                                        <span class="badge rounded-pill px-3 py-2 fw-bold text-uppercase <%= statusClass %>" style="font-size: 0.65rem; letter-spacing: 0.05em;">
+                                            <% if(booking.status === 'confirmed') { %>
+                                                <span class="d-inline-block rounded-circle bg-success me-1" style="width: 6px; height: 6px; top: -1px; position: relative;"></span>
+                                            <% } %>
+                                            <%= statusText %>
+                                        </span>
+                                    </td>
+                                </tr>
+                            <% }) %>
+                        <% } else { %>
+                            <tr>
+                                <td colspan="5" class="text-center py-5 text-muted">
+                                    <i class="bi bi-calendar-x fs-1 d-block mb-2"></i>
+                                    Aún no hay reservas registradas en el sistema.
+                                </td>
+                            </tr>
+                        <% } %>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+    </div>
+
+    <%- include('../../components/layout/footer.ejs') %>
+</main>
+<style>
+/* Dashboard Specific Styles */
+.hover-shadow:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 .5rem 1rem rgba(0,0,0,.08)!important;
+}
+.hover-translate-x:hover i {
+    transform: translateX(3px);
+    transition: transform 0.2s ease;
+}
+</style>

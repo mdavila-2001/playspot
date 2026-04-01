@@ -1,37 +1,30 @@
 const { DataTypes } = require("sequelize");
-const { sequelize } = require(".");
 
 module.exports = (sequelize) => {
     const Schedule = sequelize.define(
         'Schedule',
         {
-            date: {
-                type: DataTypes.DATEONLY,
-                allowNull: false,
+            fecha: {
+                type: DataTypes.DATE,
+                allowNull: true,
             },
-            startTime: {
+            start_time: {
                 type: DataTypes.TIME,
                 allowNull: false,
             },
-            endTime: {
+            end_time: {
                 type: DataTypes.TIME,
                 allowNull: false,
             },
-            isAvailable: {
+            disponible: {
                 type: DataTypes.BOOLEAN,
-                allowNull: false,
                 defaultValue: true
             }
         },
         {
             tableName: 'schedules',
             timestamps: true,
-            indexes: [
-                {
-                    fields: ['date', 'isAvailable']
-                }
-            ]
         }
     );
     return Schedule;
-}
+};

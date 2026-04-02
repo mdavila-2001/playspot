@@ -8,7 +8,7 @@ async function seed() {
 
         const court = await Court.findOne();
         if (!court) {
-            console.log("⚠️ No hay canchas. Por favor crea una desde el panel admin primero.");
+            console.log("No hay canchas. Por favor crea una desde el panel admin primero.");
             process.exit(1);
         }
         console.log(`Usando cancha: ${court.name} (ID: ${court.id})`);
@@ -40,7 +40,7 @@ async function seed() {
                 end_time: '19:00:00',
                 disponible: false
             });
-            console.log('✅ Horario 1 (reservado) creado.');
+            console.log('Horario 1 (reservado) creado.');
         } else {
             await schedule1.update({ disponible: false });
         }
@@ -54,7 +54,7 @@ async function seed() {
                 end_time: '20:00:00',
                 disponible: true
             });
-            console.log('✅ Horario 2 (disponible) creado.');
+            console.log('Horario 2 (disponible) creado.');
         }
 
         let schedule3 = await Schedule.findOne({ where: { court_id: court.id, fecha: yesterdayStr, start_time: '17:00:00' } });
@@ -66,7 +66,7 @@ async function seed() {
                 end_time: '18:00:00',
                 disponible: false
             });
-            console.log('✅ Horario 3 (finalizado) creado.');
+            console.log('Horario 3 (finalizado) creado.');
         }
 
         const [booking, createdBooking] = await Booking.findOrCreate({
@@ -78,7 +78,7 @@ async function seed() {
                 user_id: client.id
             }
         });
-        console.log(createdBooking ? '✅ Reserva confirmada creada.' : 'ℹ️ Reserva confirmada ya existía.');
+        console.log(createdBooking ? 'Reserva confirmada creada.' : 'ℹ️ Reserva confirmada ya existía.');
 
         const [completedBooking, createdCompleted] = await Booking.findOrCreate({
             where: { schedule_id: schedule3.id, date: yesterdayStr, user_id: client.id },
@@ -90,7 +90,7 @@ async function seed() {
                 user_id: client.id
             }
         });
-        console.log(createdCompleted ? '✅ Reserva FINALIZADA creada (lista para comentar).' : 'ℹ️ Reserva finalizada ya existía.');
+        console.log(createdCompleted ? Reserva FINALIZADA creada (lista para comentar).' : 'Reserva finalizada ya existía.');
 
         const [review, createdReview] = await Review.findOrCreate({
             where: { user_id: client.id, court_id: court.id },
@@ -101,13 +101,13 @@ async function seed() {
                 court_id: court.id
             }
         });
-        console.log(createdReview ? '✅ Reseña creada.' : 'ℹ️ Reseña ya existía.');
+        console.log(createdReview ? 'Reseña creada.' : 'Reseña ya existía.');
 
-        console.log("🎉 Seeding finalizado con éxito.");
+        console.log("Seeding finalizado con éxito.");
         process.exit(0);
 
     } catch (error) {
-        console.error("❌ Error en seeder:", error);
+        console.error("Error en seeder:", error);
         process.exit(1);
     }
 }

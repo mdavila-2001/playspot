@@ -6,7 +6,6 @@ async function seed() {
         await sequelize.authenticate();
         console.log("Conectado a la BD para seeder.");
 
-        // 1. Obtener al menos una cancha existente
         const court = await Court.findOne();
         if (!court) {
             console.log("⚠️ No hay canchas. Por favor crea una desde el panel admin primero.");
@@ -14,8 +13,7 @@ async function seed() {
         }
         console.log(`Usando cancha: ${court.name} (ID: ${court.id})`);
 
-        // 2. Crear un usuario cliente (si no existe)
-        const passwordHash = await bcrypt.hash('cliente123', 10);
+        const passwordHash = await bcrypt.hash('12345678', 10);
         const [client, createdUser] = await User.findOrCreate({
             where: { email: 'cliente@ejemplo.com' },
             defaults: {
@@ -27,14 +25,17 @@ async function seed() {
         });
         console.log(createdUser ? '✅ Usuario cliente creado.' : 'ℹ️ Usuario ya existía.');
 
-        // 3. Crear algunos horarios para hoy y mañana
-        const todayStr = new Date().toISOString().split('T')[0];
+        const today = new Date();
+        const todayStr = today.toISOString().split('T')[0];
+        const yesterday = new Date(today);
+        yesterday.setDate(today.getDate() - 1);
+        const yesterdayStr = yesterday.toISOString().split('T')[0];
         
-        let schedule1 = await Schedule.findOne({ where: { court_id: court.id, start_time: '18:00:00' } });
+        let schedule1 = await Schedule.findOne({ where: { court_id: court.id, fecha: '2026-04-01', start_time: '18:00:00' } });
         if (!schedule1) {
             schedule1 = await Schedule.create({
                 court_id: court.id,
-                fecha: todayStr,
+                fecha: '2026-04-01',
                 start_time: '18:00:00',
                 end_time: '19:00:00',
                 disponible: false
@@ -44,7 +45,7 @@ async function seed() {
             await schedule1.update({ disponible: false });
         }
 
-        let schedule2 = await Schedule.findOne({ where: { court_id: court.id, start_time: '19:00:00' } });
+        let schedule2 = await Schedule.findOne({ where: { court_id: court.id, fecha: todayStr, start_time: '19:00:00' } });
         if (!schedule2) {
             schedule2 = await Schedule.create({
                 court_id: court.id,
@@ -56,19 +57,41 @@ async function seed() {
             console.log('✅ Horario 2 (disponible) creado.');
         }
 
-        // 4. Crear una Reserva
+        let schedule3 = await Schedule.findOne({ where: { court_id: court.id, fecha: yesterdayStr, start_time: '17:00:00' } });
+        if (!schedule3) {
+            schedule3 = await Schedule.create({
+                court_id: court.id,
+                fecha: yesterdayStr,
+                start_time: '17:00:00',
+                end_time: '18:00:00',
+                disponible: false
+            });
+            console.log('✅ Horario 3 (finalizado) creado.');
+        }
+
         const [booking, createdBooking] = await Booking.findOrCreate({
-            where: { schedule_id: schedule1.id, date: todayStr, user_id: client.id },
+            where: { schedule_id: schedule1.id, date: '2026-04-01', user_id: client.id },
             defaults: {
-                date: todayStr,
+                date: '2026-04-01',
                 status: 'confirmed',
                 schedule_id: schedule1.id,
                 user_id: client.id
             }
         });
-        console.log(createdBooking ? '✅ Reserva creada.' : 'ℹ️ Reserva ya existía.');
+        console.log(createdBooking ? '✅ Reserva confirmada creada.' : 'ℹ️ Reserva confirmada ya existía.');
 
-        // 5. Crear una Reseña
+        const [completedBooking, createdCompleted] = await Booking.findOrCreate({
+            where: { schedule_id: schedule3.id, date: yesterdayStr, user_id: client.id },
+            defaults: {
+                date: yesterdayStr,
+                status: 'completed',
+                is_reviewed: false,
+                schedule_id: schedule3.id,
+                user_id: client.id
+            }
+        });
+        console.log(createdCompleted ? '✅ Reserva FINALIZADA creada (lista para comentar).' : 'ℹ️ Reserva finalizada ya existía.');
+
         const [review, createdReview] = await Review.findOrCreate({
             where: { user_id: client.id, court_id: court.id },
             defaults: {

@@ -86,14 +86,7 @@ db.sequelize.query("DROP TABLE IF EXISTS users_backup").then(() => {
 }).then(async () => {
     console.log('Base de datos conectada');
     
-    const fs = require('fs');
-    const path = require('path');
-    const resetMarker = path.join(__dirname, '.bookings_reset');
-    if (!fs.existsSync(resetMarker)) {
-        console.log('Limpiando candados corruptos de SQLite en la tabla de reservas...');
-        await db.Booking.sync({ force: true });
-        fs.writeFileSync(resetMarker, 'done');
-    }
+
     await seedAdmin();
     await seedCourts();
     app.listen(port, () => console.log(`Servidor en http://localhost:${port}`));

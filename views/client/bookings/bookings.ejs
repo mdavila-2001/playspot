@@ -25,7 +25,17 @@
                         <% activeBookings.forEach(booking => { %>
                             <div class="table-row">
                                 <div class="col"><strong><%= booking.schedule.court.name %></strong></div>
-                                <div class="col"><%= booking.date %> <br><span style="color:#64748b; font-size:0.85rem;"><%= booking.schedule.start_time.substring(0,5) %> - <%= booking.schedule.end_time.substring(0,5) %></span></div>
+                                <%
+                                    const dateStrB = String(booking.date);
+                                    let displayDateB = dateStrB;
+                                    if (dateStrB.includes('T')) {
+                                        displayDateB = new Date(dateStrB).toLocaleDateString('es-MX');
+                                    } else if (dateStrB.includes('-')) {
+                                        const p = dateStrB.split('-');
+                                        displayDateB = `${p[2]}/${p[1]}/${p[0]}`;
+                                    }
+                                %>
+                                <div class="col"><%= displayDateB %> <br><span style="color:#64748b; font-size:0.85rem;"><%= booking.schedule.start_time.substring(0,5) %> - <%= booking.schedule.end_time.substring(0,5) %></span></div>
                                 <div class="col"><span class="badge badge-primary">Confirmada</span></div>
                                 <div class="col">
                                     <form action="/client/bookings/<%= booking.id %>/cancel" method="POST" style="margin:0;">
@@ -51,7 +61,17 @@
                         <% pastBookings.forEach(booking => { %>
                             <div class="table-row">
                                 <div class="col"><strong><%= booking.schedule.court.name %></strong></div>
-                                <div class="col"><%= booking.date %> <br><span style="color:#64748b; font-size:0.85rem;"><%= booking.schedule.start_time.substring(0,5) %> - <%= booking.schedule.end_time.substring(0,5) %></span></div>
+                                <%
+                                    const dateStrB = String(booking.date);
+                                    let displayDateB = dateStrB;
+                                    if (dateStrB.includes('T')) {
+                                        displayDateB = new Date(dateStrB).toLocaleDateString('es-MX');
+                                    } else if (dateStrB.includes('-')) {
+                                        const p = dateStrB.split('-');
+                                        displayDateB = `${p[2]}/${p[1]}/${p[0]}`;
+                                    }
+                                %>
+                                <div class="col"><%= displayDateB %> <br><span style="color:#64748b; font-size:0.85rem;"><%= booking.schedule.start_time.substring(0,5) %> - <%= booking.schedule.end_time.substring(0,5) %></span></div>
                                 <div class="col">
                                     <% if (booking.status === 'completed') { %>
                                         <span class="badge badge-success">Completada</span>

@@ -33,8 +33,20 @@ exports.getCatalog = async (req, res) => {
             for (const court of courts) {
                 const applicableSlots = court.schedules.filter(s => {
                     if (!s.fecha) return false;
-                    const dateStr = typeof s.fecha === 'string' ? s.fecha : s.fecha.toISOString();
-                    return dateStr.includes(selectedDate);
+                    try {
+                        let dateStr = '';
+                        if (typeof s.fecha === 'string') {
+                            dateStr = s.fecha;
+                        } else if (s.fecha instanceof Date) {
+                            if (isNaN(s.fecha.valueOf())) return false;
+                            dateStr = s.fecha.toISOString();
+                        } else {
+                            dateStr = String(s.fecha);
+                        }
+                        return dateStr.includes(selectedDate);
+                    } catch (e) {
+                        return false;
+                    }
                 });
                 
                 const takenSlotIds = (await db.Booking.findAll({

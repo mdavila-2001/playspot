@@ -28,7 +28,8 @@ bookingController.listBookings = async (req, res) => {
 
         const currentUser = await User.findByPk(req.session.userId);
 
-        const today = new Date().toISOString().split('T')[0];
+        const localNow = new Date(new Date().getTime() - (new Date().getTimezoneOffset() * 60000));
+        const today = localNow.toISOString().split('T')[0];
         
         const stats = {
             earningsToday: 0,
@@ -37,8 +38,15 @@ bookingController.listBookings = async (req, res) => {
         };
 
         bookings.forEach(b => {
-            if (b.status === 'completed' && b.date === today) {
-                stats.earningsToday += parseFloat(b.schedule.court.price_per_hour || 0);
+            let sDate = b.schedule ? b.schedule.fecha : null;
+            if (sDate) {
+                if (sDate instanceof Date) sDate = sDate.toISOString().split('T')[0];
+                else if (typeof sDate === 'string' && sDate.includes('T')) sDate = sDate.split('T')[0];
+                else sDate = String(sDate);
+            }
+
+            if ((b.status === 'completed' || b.status === 'confirmed') && sDate === today) {
+                stats.earningsToday += parseFloat((b.schedule && b.schedule.court && b.schedule.court.price_per_hour) ? b.schedule.court.price_per_hour : 0);
             }
             
             if (b.status === 'confirmed') stats.confirmedCount++;

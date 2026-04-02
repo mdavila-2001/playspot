@@ -1,10 +1,12 @@
 const express = require('express');
 const router = express.Router();
 
-const adminController = require('../controllers/admin.controller');
+const dashboardController = require('../controllers/admin/dashboard.controller');
 const courtController = require('../controllers/admin/court.controller');
 const courtTypeController = require('../controllers/admin/court-type.controller');
-const clientController = require('../controllers/client.controller');
+const clientCatalogController = require('../controllers/client/catalog.controller');
+const clientBookingController = require('../controllers/client/booking.controller');
+const clientReviewController = require('../controllers/client/review.controller');
 const scheduleController = require('../controllers/admin/schedule.controller');
 const bookingController = require('../controllers/admin/booking.controller');
 const reviewController = require('../controllers/admin/review.controller');
@@ -20,9 +22,9 @@ router.get('/dashboard', (req, res) => {
     }
     
     if (req.session.role === 'admin') {
-        return adminController.getDashboard(req, res);
+        return dashboardController.getDashboard(req, res);
     } else {
-        return clientController.getCatalog(req, res);
+        return clientCatalogController.getCatalog(req, res);
     }
 });
 
@@ -56,10 +58,10 @@ router.post('/admin/bookings/update-status/:id', bookingController.updateStatus)
 router.get('/admin/reviews', reviewController.listReviews);
 router.post('/admin/reviews/delete/:id', reviewController.deleteReview);
 
-router.get('/client/catalog', clientController.getCatalog);
-router.post('/client/bookings', clientController.createBooking);
-router.get('/client/bookings', clientController.getMyBookings);
-router.post('/client/bookings/:id/cancel', clientController.cancelBooking);
-router.post('/client/bookings/review', clientController.createReview);
+router.get('/client/catalog', clientCatalogController.getCatalog);
+router.post('/client/bookings', clientBookingController.createBooking);
+router.get('/client/bookings', clientBookingController.getMyBookings);
+router.post('/client/bookings/:id/cancel', clientBookingController.cancelBooking);
+router.post('/client/bookings/review', clientReviewController.createReview);
 
 module.exports = router;

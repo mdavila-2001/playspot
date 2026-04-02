@@ -107,7 +107,6 @@
             const email    = document.querySelector('input[name="email"]').value.trim();
             const password = document.querySelector('input[name="password"]').value.trim();
             const confirm  = document.querySelector('input[name="confirmPassword"]').value.trim();
-            const terms    = document.getElementById('terms').checked;
 
             hideClientAlert();
 
@@ -130,11 +129,6 @@
             if (password !== confirm) {
                 e.preventDefault();
                 return showClientAlert('Las contraseñas no coinciden. Por favor, verifica.');
-            }
-
-            if (!terms) {
-                e.preventDefault();
-                return showClientAlert('Debes aceptar los Términos de Servicio para continuar.');
             }
         });
     });

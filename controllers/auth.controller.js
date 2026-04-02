@@ -42,7 +42,13 @@ const showRegister = (req, res) => {
 
 const register = async (req, res) => {
     try {
-        let { name, email, password, role } = req.body;
+        let { name, email, password, confirmPassword, role } = req.body;
+
+        if (password !== confirmPassword) {
+            req.session.flashError = 'Las contraseñas no coinciden';
+            return res.redirect('/register');
+        }
+
         email = email.toLowerCase().trim();
 
         const existingUser = await db.User.findOne({ where: { email } });

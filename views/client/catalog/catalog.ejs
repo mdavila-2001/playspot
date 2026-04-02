@@ -31,6 +31,9 @@
                             
                             <div class="court-info">
                                 <h3 class="court-name"><%= court.name %> 
+                                    <span style="font-size: 0.75rem; font-weight: 700; color: #1e3a8a; margin-left: 0.5rem; background: #dbeafe; padding: 0.2rem 0.6rem; border-radius: 999px; text-transform:uppercase;">
+                                        <%= court.type ? court.type.name : 'Deporte Varios' %>
+                                    </span>
                                     <span style="font-size: 0.75rem; font-weight: 700; color: #b45309; margin-left: 0.5rem; background: #fef3c7; padding: 0.2rem 0.6rem; border-radius: 999px; text-transform:uppercase;">
                                         Calificación: <%= court.avgRating %>
                                     </span>

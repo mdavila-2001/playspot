@@ -9,7 +9,8 @@ const showLogin = (req, res) => {
 
 const login = async (req, res) => {
     try {
-        const { email, password } = req.body;
+        let { email, password } = req.body;
+        email = email.toLowerCase().trim();
 
         const user = await db.User.findOne({ where: { email } });
         if (!user) {
@@ -41,7 +42,8 @@ const showRegister = (req, res) => {
 
 const register = async (req, res) => {
     try {
-        const { name, email, password, role } = req.body;
+        let { name, email, password, role } = req.body;
+        email = email.toLowerCase().trim();
 
         const existingUser = await db.User.findOne({ where: { email } });
         if (existingUser) {

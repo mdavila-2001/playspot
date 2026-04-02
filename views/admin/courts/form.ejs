@@ -59,7 +59,7 @@
                         </div>
                     </div>
 
-                    <!-- Campo: Estado (Activa/Inactiva) -->
+
                     <div class="mb-4 p-3 bg-light rounded-3 d-flex align-items-center justify-content-between border border-light">
                         <div class="d-flex align-items-center gap-3">
                             <div class="rounded-circle bg-white shadow-sm d-flex align-items-center justify-content-center text-primary" style="width: 40px; height: 40px;">
@@ -75,7 +75,7 @@
                         </div>
                     </div>
 
-                    <!-- Campo: Imagen -->
+
                     <div class="mb-5">
                         <label for="image_url" class="form-label fw-semibold text-secondary small text-uppercase" style="letter-spacing: 0.5px;">Fotografía Principal</label>
                         
@@ -94,12 +94,18 @@
                             <div class="text-primary mb-2">
                                 <i class="material-symbols-outlined fs-1">add_photo_alternate</i>
                             </div>
-                            <span class="fw-medium text-dark d-block">Haz clic o arrastra para subir una foto</span>
+                            <span id="file-name-display" class="fw-medium text-dark d-block">Haz clic o arrastra para subir una foto</span>
                             <span class="small text-secondary mt-1 d-block">Soporta JPG y PNG. (Máx 5MB)</span>
                         </div>
+                        <script>
+                            document.getElementById('image_url').addEventListener('change', function(e) {
+                                var file = e.target.files[0];
+                                document.getElementById('file-name-display').textContent = file ? file.name + ' seleccionado' : 'Haz clic o arrastra para subir una foto';
+                            });
+                        </script>
                     </div>
 
-                    <!-- Botones de Acción -->
+
                     <div class="d-flex align-items-center justify-content-end gap-3 pt-3 border-top">
                         <a href="/admin/courts" class="btn btn-light px-4 py-2 fw-medium text-secondary rounded-3">Cancelar</a>
                         <button type="submit" class="btn btn-primary px-4 py-2 fw-bold d-flex align-items-center gap-2 rounded-3 shadow-sm">

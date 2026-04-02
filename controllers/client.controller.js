@@ -12,6 +12,11 @@ exports.getCatalog = async (req, res) => {
             where: { is_active: true },
             include: [
                 {
+                    model: db.CourtType,
+                    as: 'type',
+                    required: false
+                },
+                {
                     model: db.Schedule,
                     as: 'schedules',
                     required: false

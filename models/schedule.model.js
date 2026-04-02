@@ -5,7 +5,7 @@ module.exports = (sequelize) => {
         'Schedule',
         {
             fecha: {
-                type: DataTypes.DATE,
+                type: DataTypes.DATEONLY,
                 allowNull: true,
             },
             start_time: {

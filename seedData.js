@@ -23,7 +23,7 @@ async function seed() {
                 role: 'client'
             }
         });
-        console.log(createdUser ? '✅ Usuario cliente creado.' : 'ℹ️ Usuario ya existía.');
+        console.log(createdUser ? 'Usuario cliente creado.' : 'ℹUsuario ya existía.');
 
         const today = new Date();
         const todayStr = today.toISOString().split('T')[0];

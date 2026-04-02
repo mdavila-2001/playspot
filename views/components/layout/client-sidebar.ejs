@@ -1,0 +1,23 @@
+<aside class="admin-sidebar d-flex flex-column p-4 border-end border-light">
+
+    <div class="d-flex flex-column gap-1 mb-5 ps-2">
+        <span class="fs-4 fw-black text-uppercase font-headline" style="color: var(--ps-primary); letter-spacing: -0.05em;">PlaySpot Client</span>
+        <span class="font-headline text-secondary fw-semibold" style="font-size: 0.7rem; letter-spacing: -0.01em;">Centro de Reservas</span>
+    </div>
+
+    <nav class="nav flex-column gap-2 flex-grow-1">
+        <a class="nav-link admin-nav-link <%= locals.activePage === 'catalog' ? 'active' : '' %> d-flex align-items-center gap-3 px-3 py-3" href="/client/catalog">
+            <span class="material-symbols-outlined">search</span> Catálogo
+        </a>
+        <a class="nav-link admin-nav-link <%= locals.activePage === 'bookings' ? 'active' : '' %> d-flex align-items-center gap-3 px-3 py-3" href="/client/bookings">
+            <span class="material-symbols-outlined">confirmation_number</span> Mis Reservas
+        </a>
+    </nav>
+
+    <div class="pt-4 mt-4 border-top border-light d-flex flex-column gap-2">
+        <a class="nav-link admin-nav-link d-flex align-items-center gap-3 px-3 py-2 text-danger" href="/logout">
+            <span class="material-symbols-outlined">logout</span> Cerrar Sesión
+        </a>
+    </div>
+
+</aside>

@@ -1,11 +1,4 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <title>Mis Reservas - PlaySpot</title>
-    <link rel="stylesheet" href="/client/bookings.css">
-</head>
-<body>
+<%- include('../components/layout/header.ejs', { title: 'Mis Reservas - PlaySpot', styles: ['/client/bookings.css'] }) %>
     <div class="navbar">
         <h1>PlaySpot</h1>
         <span>
@@ -75,5 +68,4 @@
             <div class="empty">Tu historial está vacío.</div>
         <% } %>
     </div>
-</body>
-</html>
+    <%- include('../components/layout/footer.ejs') %>

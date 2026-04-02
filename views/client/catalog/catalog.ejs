@@ -1,49 +1,16 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <title>Catálogo - PlaySpot Cliente</title>
-    <link rel="stylesheet" href="/client/catalog/catalog.css">
-    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-</head>
-<body>
-    <div class="layout">
-        <aside class="sidebar">
-            <div class="sidebar-header">
-                <h2>PLAYSPOT CLIENT</h2>
-                <p>Centro de Reservas</p>
-            </div>
-            <nav class="sidebar-nav">
-                <a href="/client/catalog" class="nav-item active">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6a2 2 0 012-2h12a2 2 0 012 2v12a2 2 0 01-2 2H6a2 2 0 01-2-2V6z"></path><path d="M8 10h8M8 14h4"></path></svg>
-                    Catálogo
-                </a>
-                <a href="/client/bookings" class="nav-item">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.5 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V7.5L14.5 2z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
-                    Mis Reservas
-                </a>
-            </nav>
-            <div class="sidebar-footer">
-                <a href="/logout" class="nav-item text-danger">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"></path></svg>
-                    Cerrar Sesión
-                </a>
-            </div>
-        </aside>
+<%- include('../../components/layout/header.ejs', { title: 'Catálogo - PlaySpot Cliente', hideNav: true, styles: ['/client/catalog/catalog.css', '/components/layout/styles/sidebar.css'] }) %>
+<%- include('../../components/layout/client-sidebar.ejs', { activePage: 'catalog' }) %>
 
-        <main class="main-content">
-            <div class="top-header">
-                <div class="header-title">
-                    <h1>Catálogo de Canchas</h1>
-                    <p>Encuentra tu próximo partido.</p>
-                </div>
-                <div class="header-user">
-                    <span>Hola, <%= user.name %></span>
-                    <a href="/logout" class="btn-header-logout" title="Cerrar Sesión">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"></path></svg>
-                    </a>
-                </div>
+<main class="admin-main">
+    <%- include('../../components/layout/client-topbar.ejs') %>
+    
+    <div class="admin-content-wrapper p-4 p-lg-5">
+        <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-end gap-4 mb-5">
+            <div>
+                <h1 class="display-5 fw-black font-headline tracking-tight mb-0 text-dark">Catálogo de Canchas</h1>
+                <p class="text-secondary fw-medium">Encuentra tu próximo partido.</p>
             </div>
+        </div>
 
             <div class="container">
                 <div class="search-box">
@@ -101,8 +68,8 @@
                     <% }); %>
                 </div>
             </div>
-        </main>
     </div>
+</main>
     
     <script>
         document.addEventListener('DOMContentLoaded', () => {
@@ -121,5 +88,4 @@
             });
         });
     </script>
-</body>
-</html>
+    <%- include('../../components/layout/footer.ejs') %>

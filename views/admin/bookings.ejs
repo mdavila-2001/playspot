@@ -1,11 +1,4 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <title>Gestión de Reservas - PlaySpot Admin</title>
-    <link rel="stylesheet" href="/admin/bookings.css">
-</head>
-<body>
+<%- include('../components/layout/header.ejs', { title: 'Gestión de Reservas - PlaySpot Admin', styles: ['/admin/bookings.css'] }) %>
     <div class="navbar">
         <h1>PlaySpot <span style="font-size: 0.8rem; color: #64748b; margin-left:10px;">PANEL ADMIN</span></h1>
         <span>
@@ -69,5 +62,4 @@
             </tbody>
         </table>
     </div>
-</body>
-</html>
+    <%- include('../components/layout/footer.ejs') %>

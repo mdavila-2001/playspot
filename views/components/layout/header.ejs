@@ -18,12 +18,16 @@
 
         <link rel="stylesheet" href="/components/layout/styles/root.css">
         <link rel="stylesheet" href="/components/layout/styles/sidebar.css">
-        <link rel="stylesheet" href="/components/layout/styles/sidebar.css">
         <link rel="stylesheet" href="/admin/courts/courts.css">
         <link rel="stylesheet" href="/admin/dashboard/dashboard.css">
         <link rel="stylesheet" href="/admin/bookings/bookings.css">
         <link rel="stylesheet" href="/auth/login.css">
         <link rel="stylesheet" href="/auth/register.css">
+        <% if (locals.styles && Array.isArray(locals.styles)) { %>
+            <% locals.styles.forEach(function(style) { %>
+                <link rel="stylesheet" href="<%= style %>">
+            <% }) %>
+        <% } %>
 
     </head>
     <body>

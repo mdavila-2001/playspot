@@ -1,0 +1,24 @@
+<header class="admin-topbar d-flex justify-content-end align-items-center px-4">
+
+    <div class="d-flex align-items-center gap-4">
+
+        <div class="d-flex align-items-center gap-3">
+            <div class="text-end">
+                <p class="mb-0 text-uppercase fw-bold font-headline text-dark" style="font-size: 0.75rem; letter-spacing: 0.05em;">
+                    <% if (locals.user && locals.user.name) { %>
+                        <%= user.name %>
+                    <% } else { %>
+                        Cliente
+                    <% } %>
+                </p>
+                <p class="mb-0 text-secondary fw-medium" style="font-size: 0.65rem;">Jugador Habitual</p>
+            </div>
+
+            <a href="/logout" class="btn btn-sm border-0 p-2 d-flex align-items-center text-danger rounded-circle"
+               style="background: transparent;" title="Cerrar Sesión">
+                <span class="material-symbols-outlined" style="font-size: 1.3rem;">logout</span>
+            </a>
+        </div>
+
+    </div>
+</header>

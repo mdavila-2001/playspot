@@ -4,8 +4,6 @@ body {
     color: #1e293b; 
     margin: 0; 
     padding: 0; 
-    display: flex;
-    min-height: 100vh;
 }
 
 .layout {

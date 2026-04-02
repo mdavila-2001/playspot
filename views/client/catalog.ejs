@@ -1,11 +1,4 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <title>Catálogo - PlaySpot</title>
-    <link rel="stylesheet" href="/client/catalog.css">
-</head>
-<body>
+<%- include('../components/layout/header.ejs', { title: 'Catálogo - PlaySpot', styles: ['/client/catalog.css'] }) %>
     <div class="navbar">
         <h1>PlaySpot <span style="font-size: 0.8rem; color: #64748b; margin-left:10px;">CLIENTE</span></h1>
         <span>
@@ -74,5 +67,4 @@
             <% } %>
         </div>
     </div>
-</body>
-</html>
+    <%- include('../components/layout/footer.ejs') %>

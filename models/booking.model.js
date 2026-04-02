@@ -4,7 +4,6 @@ module.exports = (sequelize) => {
     const Booking = sequelize.define(
         'Booking',
         {
-            // La fecha específica que el cliente quiere reservar
             date: {
                 type: DataTypes.DATEONLY,
                 allowNull: false,

@@ -6,15 +6,14 @@ async function seed() {
         await sequelize.authenticate();
         console.log("Conectado a la BD para seeder.");
 
-        // 1. Obtener al menos una cancha existente
+        
         const court = await Court.findOne();
         if (!court) {
-            console.log("⚠️ No hay canchas. Por favor crea una desde el panel admin primero.");
+            console.log("No hay canchas. Por favor crea una desde el panel admin primero.");
             process.exit(1);
         }
         console.log(`Usando cancha: ${court.name} (ID: ${court.id})`);
 
-        // 2. Crear un usuario cliente (si no existe)
         const passwordHash = await bcrypt.hash('cliente123', 10);
         const [client, createdUser] = await User.findOrCreate({
             where: { email: 'cliente@ejemplo.com' },
@@ -25,9 +24,8 @@ async function seed() {
                 role: 'client'
             }
         });
-        console.log(createdUser ? '✅ Usuario cliente creado.' : 'ℹ️ Usuario ya existía.');
+        console.log(createdUser ? 'Usuario cliente creado.' : 'ℹUsuario ya existía.');
 
-        // 3. Crear algunos horarios para hoy y mañana
         const todayStr = new Date().toISOString().split('T')[0];
         
         let schedule1 = await Schedule.findOne({ where: { court_id: court.id, start_time: '18:00:00' } });
@@ -39,7 +37,7 @@ async function seed() {
                 end_time: '19:00:00',
                 disponible: false
             });
-            console.log('✅ Horario 1 (reservado) creado.');
+            console.log('Horario 1 (reservado) creado.');
         } else {
             await schedule1.update({ disponible: false });
         }
@@ -53,10 +51,9 @@ async function seed() {
                 end_time: '20:00:00',
                 disponible: true
             });
-            console.log('✅ Horario 2 (disponible) creado.');
+            console.log('Horario 2 (disponible) creado.');
         }
 
-        // 4. Crear una Reserva
         const [booking, createdBooking] = await Booking.findOrCreate({
             where: { schedule_id: schedule1.id, date: todayStr, user_id: client.id },
             defaults: {
@@ -66,9 +63,8 @@ async function seed() {
                 user_id: client.id
             }
         });
-        console.log(createdBooking ? '✅ Reserva creada.' : 'ℹ️ Reserva ya existía.');
+        console.log(createdBooking ? 'Reserva creada.' : 'ℹReserva ya existía.');
 
-        // 5. Crear una Reseña
         const [review, createdReview] = await Review.findOrCreate({
             where: { user_id: client.id, court_id: court.id },
             defaults: {
@@ -78,13 +74,13 @@ async function seed() {
                 court_id: court.id
             }
         });
-        console.log(createdReview ? '✅ Reseña creada.' : 'ℹ️ Reseña ya existía.');
+        console.log(createdReview ? 'Reseña creada.' : 'ℹReseña ya existía.');
 
-        console.log("🎉 Seeding finalizado con éxito.");
+        console.log("Seeding finalizado con éxito.");
         process.exit(0);
 
     } catch (error) {
-        console.error("❌ Error en seeder:", error);
+        console.error("Error en seeder:", error);
         process.exit(1);
     }
 }

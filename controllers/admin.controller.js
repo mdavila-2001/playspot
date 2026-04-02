@@ -69,7 +69,6 @@ exports.generateSchedules = async (req, res) => {
 
         while (currentHour < endHour) {
             const nextHour = currentHour + 1;
-            // Evitar duplicados: verificar si ya existe ese slot
             const existing = await db.Schedule.findOne({
                 where: {
                     court_id,

@@ -28,7 +28,6 @@ bookingController.listBookings = async (req, res) => {
 
         const currentUser = await User.findByPk(req.session.userId);
 
-        // Calcular estadísticas reales
         const today = new Date().toISOString().split('T')[0];
         
         const stats = {
